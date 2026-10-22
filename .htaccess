@@ -1,0 +1,7 @@
+# Optional Apache/PHP hosting headers for demo portal routes.
+<IfModule mod_headers.c>
+  <FilesMatch "^client-(login|portal)\.html$">
+    Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+    Header always set Cache-Control "no-store"
+  </FilesMatch>
+</IfModule>
