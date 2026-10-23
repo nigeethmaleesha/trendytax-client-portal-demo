@@ -4,7 +4,7 @@
 
   const DEMO_PROFILE = Object.freeze({ fullName: 'Alex Carter', email: 'alex.carter@example.com', phone: '+61 400 000 000', business: 'Carter & Co.' });
   const EMAIL = 'info@trendytaxsolutions.com.au';
-  const SITE = 'https://www.trendytaxsolutions.com.au';
+  const SITE = 'https://trendytax-website.vercel.app/';
   const PROFILE_KEY = 'tts_demo_profile_v1';
   const SESSION_KEY = 'tts_demo_session_v1';
   const DB_NAME = 'tts_customer_portal_demo_v1';
@@ -93,43 +93,261 @@
   const initials = () => (state.profile.fullName || 'AC').trim().split(/\s+/).slice(0, 2).map(v => v[0] || '').join('').toUpperCase();
   const loggedIn = () => sessionStorage.getItem(SESSION_KEY) === 'demo';
   const routeName = () => { const r = (location.hash.replace(/^#\/?/, '') || 'dashboard').split(/[?/]/)[0]; return ['dashboard', 'documents', 'profile', 'login'].includes(r) ? r : 'dashboard'; };
-  const brand = (light = false) => `<div class="brand-mark ${light ? 'brand-light' : ''}"><img src="assets/img/brand-mark.png" alt="" width="42" height="35" /><div class="brand-wordmark"><strong>Trendy Tax</strong><span>SOLUTIONS</span></div></div>`;
+  const brand = (light = false) => `<div class="brand-mark ${light ? 'brand-light' : ''}"><img src="assets/img/brand-mark.png" alt="" width="42" height="35" /><div class="brand-wordmark"><strong>TrendyTax</strong><span>SOLUTIONS</span></div></div>`;
+
   function toast(message, kind = 'success') {
-    const el = document.createElement('div'); el.className = `toast ${kind}`; el.setAttribute('role', 'status'); el.innerHTML = `${icon(kind === 'error' ? 'alert' : 'check')}<span>${escapeHTML(message)}</span>`;
+    const el = document.createElement('div');
+    el.className = `toast ${kind}`;
+    el.setAttribute('role', 'status');
+    el.innerHTML = `${icon(kind === 'error' ? 'alert' : 'check')}<span>${escapeHTML(message)}</span>`;
     $('#toast-stack').append(el);
-    setTimeout(() => { el.classList.add('leaving'); setTimeout(() => el.remove(), 240); }, 4100);
+    setTimeout(() => { el.classList.add('leaving'); setTimeout(() => el.remove(), 240); }, 3800);
   }
 
   function loginView() {
-    return `<div class="auth-layout"><section class="auth-story"><div class="auth-story-top">${brand(true)}<span class="auth-tag">CLIENT ACCESS</span></div><div class="auth-story-content"><span class="auth-kicker"><i></i> YOUR SPACE. YOUR DOCUMENTS.</span><h1>A simpler way to stay <em>organised.</em></h1><p>Everything you need from your accounting team, in one considered space.</p><div class="auth-line"></div><div class="auth-story-footer"><span class="auth-circle">${icon('shield')}</span><span>Designed for clarity.<br/>Built around you.</span></div></div><div class="auth-pattern" aria-hidden="true"><div></div><div></div><div></div></div><span class="auth-copyright">© ${new Date().getFullYear()} Trendy Tax Solutions</span></section><section class="auth-form-side" id="main"><div class="auth-top-link"><span>Customer portal</span><a href="${SITE}" target="_blank" rel="noopener noreferrer">Main website ${icon('arrowUpRight')}</a></div><div class="auth-form-wrap"><div class="auth-form-kicker">WELCOME BACK</div><h2>Sign in to your<br/>client portal<span>.</span></h2><p class="auth-description">Access your profile and documents.</p><form id="login-form" class="auth-form" novalidate><div class="field-group"><label for="login-email">Email address</label><input type="email" id="login-email" autocomplete="email" placeholder="you@example.com" value="" /></div><div class="field-group"><div class="label-flex"><label for="login-password">Password</label><span class="demo-only">DEMO ACCESS</span></div><div class="password-wrap"><input id="login-password" type="password" autocomplete="current-password" placeholder="Enter your password" /><button class="password-toggle" type="button" data-action="toggle-password" aria-label="Show password" aria-pressed="false">${icon('eye')}</button></div></div><button class="button button-primary auth-submit" type="submit">Continue to portal ${icon('arrowRight')}</button></form><div class="auth-demo-note">${icon('sparkle')} <div><strong>Preview mode</strong><p>No login details needed. Select “Continue to portal” to explore the demo.</p></div></div></div><div class="auth-bottom"><span>Need assistance?</span><a href="mailto:${EMAIL}">Contact our team ${icon('arrowUpRight')}</a></div></section></div>`;
+    return `
+      <div class="signin-layout">
+        <section class="signin-panel" id="main">
+          <div class="signin-topbar">
+            ${brand()}
+            <a class="site-link" href="${SITE}" target="_blank" rel="noopener noreferrer">Main website ${icon('arrowUpRight')}</a>
+          </div>
+
+          <div class="signin-card">
+            <span class="section-chip">Customer portal</span>
+            <h1>Access your client workspace</h1>
+            <p class="signin-copy">View documents, update your details and keep everything in one place.</p>
+
+            <form id="login-form" class="auth-form" novalidate>
+              <div class="field-group">
+                <label for="login-email">Email address</label>
+                <input type="email" id="login-email" autocomplete="email" placeholder="you@example.com" />
+              </div>
+              <div class="field-group">
+                <div class="label-flex">
+                  <label for="login-password">Password</label>
+                  <span class="demo-only">Preview access</span>
+                </div>
+                <div class="password-wrap">
+                  <input id="login-password" type="password" autocomplete="current-password" placeholder="Enter your password" />
+                  <button class="password-toggle" type="button" data-action="toggle-password" aria-label="Show password" aria-pressed="false">${icon('eye')}</button>
+                </div>
+              </div>
+              <button class="button button-primary auth-submit" type="submit">Continue ${icon('arrowRight')}</button>
+            </form>
+
+            <div class="signin-note">
+              ${icon('sparkle')}
+              <div>
+                <strong>Preview mode</strong>
+                <p>Select “Continue” to explore the portal.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="signin-meta-row">
+            <div class="meta-pill"><span class="meta-pill-icon">${icon('shield')}</span><div><strong>Private</strong><small>Focused client access</small></div></div>
+            <div class="meta-pill"><span class="meta-pill-icon">${icon('layers')}</span><div><strong>Responsive</strong><small>Desktop, tablet and mobile</small></div></div>
+          </div>
+        </section>
+
+        <aside class="signin-showcase" aria-hidden="true">
+          <div class="showcase-hero">
+            <span class="section-chip chip-dark">TrendyTax portal</span>
+            <h2>Clean, smart and built to match your main site.</h2>
+            <p>A polished client-facing preview with just the essentials.</p>
+          </div>
+          <div class="showcase-stack">
+            <div class="showcase-card showcase-card-primary">
+              <div class="showcase-card-top"><span>Documents</span><span>4 ready</span></div>
+              <strong>Simple file access</strong>
+              <p>Preview, download and manage documents without clutter.</p>
+            </div>
+            <div class="showcase-grid">
+              <div class="showcase-card small-card">
+                <span class="showcase-icon">${icon('user')}</span>
+                <strong>Profile</strong>
+                <p>Quick account updates.</p>
+              </div>
+              <div class="showcase-card small-card">
+                <span class="showcase-icon">${icon('upload')}</span>
+                <strong>Uploads</strong>
+                <p>Local demo file upload.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>`;
   }
 
-  const navItem = (key, label, ico, current) => `<a href="#/${key}" class="sidebar-link ${current === key ? 'active' : ''}" ${current === key ? 'aria-current="page"' : ''}>${icon(ico)}<span>${label}</span>${current === key ? '<span class="active-dot"></span>' : ''}</a>`;
+  const navItem = (key, label, ico, current) => `
+    <a href="#/${key}" class="sidebar-link ${current === key ? 'active' : ''}" ${current === key ? 'aria-current="page"' : ''}>
+      <span class="sidebar-link-icon">${icon(ico)}</span>
+      <span>${label}</span>
+    </a>`;
+
   function shell(current, content) {
     const title = { dashboard: 'Overview', documents: 'Documents', profile: 'My profile' }[current];
-    const crumb = { dashboard: 'Your workspace', documents: 'File library', profile: 'Account details' }[current];
-    return `<div class="portal-layout"><div class="mobile-scrim ${state.sidebarOpen ? 'visible' : ''}" data-action="close-sidebar"></div><aside class="sidebar ${state.sidebarOpen ? 'sidebar-open' : ''}" aria-label="Main navigation"><div class="sidebar-brand">${brand()}</div><div class="sidebar-main"><div class="sidebar-label">WORKSPACE</div><nav class="sidebar-nav">${navItem('dashboard','Overview','home',current)}${navItem('documents','Documents','folder',current)}${navItem('profile','My profile','user',current)}</nav></div><div class="sidebar-bottom"><div class="sidebar-help"><div class="help-icon">${icon('help')}</div><strong>Here to help.</strong><p>Questions about your documents?</p><a href="mailto:${EMAIL}">Contact our team ${icon('arrowUpRight')}</a></div><button class="sidebar-logout" data-action="logout" type="button">${icon('logout')}<span>Sign out</span>${icon('arrowRight','logout-arr')}</button><div class="sidebar-copyright">© ${new Date().getFullYear()} Trendy Tax Solutions</div></div></aside><div class="portal-main"><header class="topbar"><div class="topbar-left"><button class="icon-button mobile-menu" aria-label="Open navigation" data-action="toggle-sidebar" aria-expanded="${state.sidebarOpen}" type="button">${icon('menu')}</button><div class="topbar-trail"><span>Client portal</span>${icon('chevronRight')}<strong>${title}</strong></div></div><div class="topbar-right"><span class="preview-label"><i></i> DEMO PREVIEW</span><span class="topbar-divider"></span><a href="#/profile" class="topbar-user" title="View your profile"><span class="topbar-avatar">${escapeHTML(initials())}</span><span class="topbar-user-name">${escapeHTML(state.profile.fullName)}</span>${icon('chevronDown')}</a></div></header><main id="main" class="page-content">${content}</main><footer class="portal-footer"><span>Trendy Tax Solutions · Client portal preview</span><span>Hobart, Tasmania</span></footer></div></div>`;
+    return `
+      <div class="portal-shell">
+        <div class="mobile-scrim ${state.sidebarOpen ? 'visible' : ''}" data-action="close-sidebar"></div>
+
+        <aside class="portal-sidebar ${state.sidebarOpen ? 'sidebar-open' : ''}" aria-label="Main navigation">
+          <div class="sidebar-brand-block">${brand(true)}</div>
+          <nav class="sidebar-nav">${navItem('dashboard', 'Overview', 'home', current)}${navItem('documents', 'Documents', 'folder', current)}${navItem('profile', 'My profile', 'user', current)}</nav>
+
+          <div class="sidebar-support">
+            <strong>Need help?</strong>
+            <a href="mailto:${EMAIL}">Contact support ${icon('arrowUpRight')}</a>
+            <a href="${SITE}" target="_blank" rel="noopener noreferrer">Open main site ${icon('arrowUpRight')}</a>
+          </div>
+
+          <button class="sidebar-logout" data-action="logout" type="button">${icon('logout')}<span>Sign out</span></button>
+        </aside>
+
+        <div class="portal-stage">
+          <header class="portal-topbar">
+            <div class="topbar-left">
+              <button class="icon-button mobile-menu" aria-label="Open navigation" data-action="toggle-sidebar" aria-expanded="${state.sidebarOpen}" type="button">${icon('menu')}</button>
+              <div class="topbar-breadcrumb"><span>Client portal</span>${icon('chevronRight')}<strong>${title}</strong></div>
+            </div>
+            <div class="topbar-actions">
+              <a class="topbar-site-link" href="${SITE}" target="_blank" rel="noopener noreferrer">Main site ${icon('arrowUpRight')}</a>
+              <a href="#/profile" class="topbar-user" title="View your profile">
+                <span class="topbar-avatar">${escapeHTML(initials())}</span>
+                <span class="topbar-user-meta"><strong>${escapeHTML(state.profile.fullName)}</strong><small>Client account</small></span>
+              </a>
+            </div>
+          </header>
+
+          <main id="main" class="portal-content">${content}</main>
+        </div>
+      </div>`;
   }
 
   function pageHead(kicker, title, desc, action = '') {
-    return `<div class="page-heading"><div><div class="eyebrow">${kicker}</div><h1>${title}</h1><p>${desc}</p></div>${action}</div>`;
+    return `
+      <div class="page-head">
+        <div>
+          <span class="section-chip">${kicker}</span>
+          <h1>${title}</h1>
+          <p>${desc}</p>
+        </div>
+        ${action}
+      </div>`;
   }
-  const uploadButton = (label = 'Upload document') => `<button type="button" class="button button-primary" data-action="upload">${icon('plus')} ${label}</button>`;
+
+  const uploadButton = (label = 'Upload file') => `<button type="button" class="button button-primary" data-action="upload">${icon('plus')} ${label}</button>`;
+
   function docGlyph(doc, tiny = false) {
     const ext = (doc.name.split('.').pop() || '').toLowerCase();
     const type = ext === 'pdf' ? 'pdf' : ['jpg','jpeg','png'].includes(ext) ? 'img' : ['xls','xlsx'].includes(ext) ? 'sheet' : 'file';
     return `<span class="document-glyph ${type} ${tiny ? 'tiny' : ''}">${icon('file')}<small>${type === 'pdf' ? 'PDF' : type === 'img' ? 'IMG' : type === 'sheet' ? 'XLS' : ext.substring(0, 3).toUpperCase()}</small></span>`;
   }
+
   function docsRows(documents, compact = false) {
-    if (!documents.length) return `<div class="empty-state">${icon('folder')}<strong>No documents found</strong><p>${compact ? 'Your uploaded files will appear here.' : 'Try a different search or category.'}</p>${!compact ? '<button type="button" class="button button-muted" data-action="clear-filters">Clear filters</button>' : ''}</div>`;
-    return `<div class="document-list ${compact ? 'compact-list' : ''}"><div class="document-header"><span>DOCUMENT</span><span>CATEGORY</span><span>ADDED</span><span>ACTIONS</span></div>${documents.map(doc => `<div class="document-row"><div class="doc-main">${docGlyph(doc)}<div class="doc-details"><strong title="${escapeHTML(doc.name)}">${escapeHTML(doc.displayName || doc.name)}</strong><span>${doc.source === 'sample' ? 'Example file' : 'Your upload'} · ${sizeFmt(doc.size)}</span></div></div><div class="doc-category"><span class="category-badge">${escapeHTML(doc.category)}</span></div><div class="doc-date">${dateFmt(doc.uploaded)}</div><div class="doc-actions"><button class="table-icon-button" type="button" aria-label="Preview ${escapeHTML(doc.name)}" title="Preview" data-action="preview" data-id="${escapeHTML(doc.id)}">${icon('eye')}</button><button class="table-icon-button" type="button" aria-label="Download ${escapeHTML(doc.name)}" title="Download" data-action="download" data-id="${escapeHTML(doc.id)}">${icon('download')}</button>${doc.source === 'local' ? `<button class="table-icon-button danger-on-hover" type="button" aria-label="Delete ${escapeHTML(doc.name)}" title="Delete" data-action="delete" data-id="${escapeHTML(doc.id)}">${icon('trash')}</button>` : ''}</div></div>`).join('')}</div>`;
+    if (!documents.length) {
+      return `<div class="empty-state">${icon('folder')}<strong>No documents found</strong><p>${compact ? 'Your uploads will appear here.' : 'Try another search or filter.'}</p>${!compact ? '<button type="button" class="button button-muted" data-action="clear-filters">Clear filters</button>' : ''}</div>`;
+    }
+    return `
+      <div class="document-list ${compact ? 'compact-list' : ''}">
+        <div class="document-header"><span>Document</span><span>Category</span><span>Date</span><span>Actions</span></div>
+        ${documents.map(doc => `
+          <div class="document-row">
+            <div class="doc-main">
+              ${docGlyph(doc, compact)}
+              <div class="doc-details">
+                <strong title="${escapeHTML(doc.name)}">${escapeHTML(doc.displayName || doc.name)}</strong>
+                <span>${doc.source === 'sample' ? 'Example file' : 'Your upload'} · ${sizeFmt(doc.size)}</span>
+              </div>
+            </div>
+            <div class="doc-category"><span class="category-badge">${escapeHTML(doc.category)}</span></div>
+            <div class="doc-date">${dateFmt(doc.uploaded)}</div>
+            <div class="doc-actions">
+              <button class="table-icon-button" type="button" aria-label="Preview ${escapeHTML(doc.name)}" title="Preview" data-action="preview" data-id="${escapeHTML(doc.id)}">${icon('eye')}</button>
+              <button class="table-icon-button" type="button" aria-label="Download ${escapeHTML(doc.name)}" title="Download" data-action="download" data-id="${escapeHTML(doc.id)}">${icon('download')}</button>
+              ${doc.source === 'local' ? `<button class="table-icon-button danger-on-hover" type="button" aria-label="Delete ${escapeHTML(doc.name)}" title="Delete" data-action="delete" data-id="${escapeHTML(doc.id)}">${icon('trash')}</button>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>`;
   }
+
   function dashboardView() {
     const docs = allDocs();
-    const counts = { all: docs.length, uploaded: state.docs.length, category: new Set(docs.map(d => d.category)).size };
+    const counts = {
+      all: docs.length,
+      uploaded: state.docs.length,
+      category: new Set(docs.map(d => d.category)).size
+    };
     const recent = docs.slice(0, 4);
-    return `<div class="dashboard-page"><div class="dashboard-intro"><div class="intro-copy"><div class="intro-tag"><span></span> CLIENT WORKSPACE</div><h1>Welcome back, ${escapeHTML(nameFirst())}<span>.</span></h1><p>A clear view of your documents, all in one place.</p><div class="intro-actions"><a href="#/documents" class="button button-light">View your documents ${icon('arrowRight')}</a><button type="button" data-action="upload" class="button button-ghost">${icon('plus')} Upload a file</button></div></div><div class="intro-art" aria-hidden="true"><div class="art-ring ring-one"></div><div class="art-ring ring-two"></div><div class="art-back-paper"><div></div><div></div></div><div class="art-document"><span class="art-document-icon">${icon('file')}</span><span class="art-document-line l-one"></span><span class="art-document-line l-two"></span><span class="art-document-line l-three"></span><span class="art-document-line l-four"></span><span class="art-document-chip">${icon('check')}</span></div><div class="art-floating-plus">${icon('plus')}</div></div></div><div class="summary-grid"><div class="summary-card"><div class="summary-card-top"><span class="summary-icon navy">${icon('layers')}</span><span class="summary-meta">01</span></div><strong>${counts.all.toString().padStart(2,'0')}</strong><span>Available documents</span><div class="summary-line"></div></div><div class="summary-card"><div class="summary-card-top"><span class="summary-icon green">${icon('upload')}</span><span class="summary-meta">02</span></div><strong>${counts.uploaded.toString().padStart(2,'0')}</strong><span>Your uploads</span><div class="summary-line"></div></div><div class="summary-card"><div class="summary-card-top"><span class="summary-icon amber">${icon('folder')}</span><span class="summary-meta">03</span></div><strong>${counts.category.toString().padStart(2,'0')}</strong><span>Document categories</span><div class="summary-line"></div></div></div><div class="dashboard-columns"><section class="surface-card recent-card"><div class="card-heading"><div><div class="eyebrow">FILE ACTIVITY</div><h2>Recent documents</h2><p>Your latest available files.</p></div><a href="#/documents" class="text-arrow">View all ${icon('arrowRight')}</a></div>${docsRows(recent,true)}</section><aside class="quick-column"><section class="surface-card quick-card"><div class="card-heading"><div><div class="eyebrow">SHORTCUTS</div><h2>Quick actions</h2></div></div><button type="button" class="quick-action" data-action="upload"><span class="quick-action-icon teal-icon">${icon('upload')}</span><span><strong>Upload a document</strong><small>Keep a file in your portal</small></span>${icon('arrowUpRight')}</button><a href="#/profile" class="quick-action"><span class="quick-action-icon blue-icon">${icon('user')}</span><span><strong>Update your profile</strong><small>Manage your contact details</small></span>${icon('arrowUpRight')}</a><a href="mailto:${EMAIL}" class="quick-action"><span class="quick-action-icon sand-icon">${icon('mail')}</span><span><strong>Get in touch</strong><small>Contact the accounting team</small></span>${icon('arrowUpRight')}</a></section><div class="demo-disclaimer">${icon('shield')}<div><strong>Portal preview</strong><p>This is a demonstration with sample information. No files are sent to the firm.</p></div></div></aside></div></div>`;
+
+    return `
+      <div class="dashboard-page">
+        <section class="hero-card">
+          <div class="hero-copy">
+            <span class="section-chip chip-ghost">Overview</span>
+            <h1>Welcome back, ${escapeHTML(nameFirst())}</h1>
+            <p>Everything important is organised here.</p>
+          </div>
+          <div class="hero-actions">
+            <a href="#/documents" class="button button-light">View documents ${icon('arrowRight')}</a>
+            <button type="button" data-action="upload" class="button button-ghost">${icon('plus')} Upload file</button>
+          </div>
+        </section>
+
+        <div class="metric-row">
+          <article class="metric-card">
+            <span class="metric-icon">${icon('folder')}</span>
+            <strong>${counts.all.toString().padStart(2,'0')}</strong>
+            <small>Documents</small>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon">${icon('upload')}</span>
+            <strong>${counts.uploaded.toString().padStart(2,'0')}</strong>
+            <small>Your uploads</small>
+          </article>
+          <article class="metric-card">
+            <span class="metric-icon">${icon('layers')}</span>
+            <strong>${counts.category.toString().padStart(2,'0')}</strong>
+            <small>Categories</small>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <section class="surface-card recent-card">
+            <div class="card-head">
+              <div>
+                <span class="section-chip">Recent files</span>
+                <h2>Latest documents</h2>
+              </div>
+              <a href="#/documents" class="text-link">View all ${icon('arrowRight')}</a>
+            </div>
+            ${docsRows(recent, true)}
+          </section>
+
+          <aside class="side-stack">
+            <section class="surface-card action-card">
+              <div class="card-head compact-head">
+                <div>
+                  <span class="section-chip">Quick actions</span>
+                  <h2>Shortcuts</h2>
+                </div>
+              </div>
+              <button type="button" class="action-link" data-action="upload"><span>${icon('upload')}</span><div><strong>Upload file</strong><small>Add a document to this browser</small></div>${icon('arrowRight')}</button>
+              <a href="#/profile" class="action-link"><span>${icon('user')}</span><div><strong>Update profile</strong><small>Review your contact details</small></div>${icon('arrowRight')}</a>
+              <a href="${SITE}" target="_blank" rel="noopener noreferrer" class="action-link"><span>${icon('external')}</span><div><strong>Main website</strong><small>Open TrendyTax website</small></div>${icon('arrowRight')}</a>
+            </section>
+
+            <section class="surface-card note-card">
+              <span class="section-chip">Portal note</span>
+              <h2>Simple by design</h2>
+              <p>This preview keeps the experience focused on documents and account details.</p>
+            </section>
+          </aside>
+        </div>
+      </div>`;
   }
+
   function filteredDocs() {
     let list = allDocs();
     if (state.filter !== 'All documents') list = list.filter(d => d.category === state.filter);
@@ -139,14 +357,85 @@
     if (state.sort === 'name') list.sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name));
     return list;
   }
+
   function documentsView() {
     const filters = ['All documents', 'Tax documents', 'Statements', 'Other'];
     const docs = filteredDocs();
-    return `<div class="documents-page">${pageHead('YOUR FILES','Document library','View, download and organise your documents.',uploadButton())}<div class="documents-banner"><span class="banner-icon">${icon('shield')}</span><p><strong>Your files, in one place.</strong> This preview includes example documents. Files you add remain in this browser.</p></div><section class="surface-card library-card"><div class="library-tabs" role="group" aria-label="Filter by category">${filters.map(f => `<button type="button" class="tab-button ${state.filter === f ? 'selected' : ''}" data-action="filter" data-filter="${f}" aria-pressed="${state.filter === f}">${f}<span>${allDocs().filter(d => f === 'All documents' || d.category === f).length}</span></button>`).join('')}</div><div class="library-controls"><div class="search-field">${icon('search')}<input type="search" id="doc-search" placeholder="Search documents" value="${escapeHTML(state.query)}" aria-label="Search documents" autocomplete="off" /></div><div class="sort-group"><label for="doc-sort">Sort by</label><select id="doc-sort"><option value="newest" ${state.sort === 'newest' ? 'selected' : ''}>Newest first</option><option value="oldest" ${state.sort === 'oldest' ? 'selected' : ''}>Oldest first</option><option value="name" ${state.sort === 'name' ? 'selected' : ''}>Name A–Z</option></select></div></div><div class="library-result-count">Showing ${docs.length} ${docs.length === 1 ? 'document' : 'documents'}</div><div id="library-rows">${docsRows(docs)}</div></section><div class="library-footnote">${icon('help')} Example documents can be previewed and downloaded. Your uploads can also be removed.</div></div>`;
+    return `
+      <div class="documents-page">
+        ${pageHead('Document library', 'Your files', 'Search, preview and download documents.', uploadButton())}
+        <section class="surface-card library-card">
+          <div class="library-topbar">
+            <div class="library-tabs" role="group" aria-label="Filter by category">
+              ${filters.map(f => `<button type="button" class="tab-button ${state.filter === f ? 'selected' : ''}" data-action="filter" data-filter="${f}" aria-pressed="${state.filter === f}">${f}<span>${allDocs().filter(d => f === 'All documents' || d.category === f).length}</span></button>`).join('')}
+            </div>
+            <div class="library-mini-note">Example files are included for the preview.</div>
+          </div>
+          <div class="library-controls">
+            <div class="search-field">${icon('search')}<input type="search" id="doc-search" placeholder="Search documents" value="${escapeHTML(state.query)}" aria-label="Search documents" autocomplete="off" /></div>
+            <div class="sort-group"><label for="doc-sort">Sort by</label><select id="doc-sort"><option value="newest" ${state.sort === 'newest' ? 'selected' : ''}>Newest first</option><option value="oldest" ${state.sort === 'oldest' ? 'selected' : ''}>Oldest first</option><option value="name" ${state.sort === 'name' ? 'selected' : ''}>Name A–Z</option></select></div>
+          </div>
+          <div class="library-result-count">Showing ${docs.length} ${docs.length === 1 ? 'document' : 'documents'}</div>
+          <div id="library-rows">${docsRows(docs)}</div>
+        </section>
+      </div>`;
   }
+
   function profileView() {
     const p = state.profile;
-    return `<div class="profile-page">${pageHead('YOUR ACCOUNT','My profile','Keep your contact details up to date.')}<div class="profile-grid"><div class="profile-main surface-card"><div class="profile-identity"><span class="profile-big-avatar">${escapeHTML(initials())}</span><div><h2>${escapeHTML(p.fullName)}</h2><p>Client account</p></div><span class="profile-demo-tag">DEMO PROFILE</span></div><div class="profile-form-title"><h3>Personal information</h3><p>Edit your details below.</p></div><form id="profile-form" class="profile-form"><div class="field-group"><label for="profile-name">Full name <span class="required">*</span></label><input id="profile-name" name="fullName" type="text" maxlength="80" autocomplete="name" required value="${escapeHTML(p.fullName)}" /></div><div class="field-group"><label for="profile-email">Email address <span class="required">*</span></label><input id="profile-email" name="email" type="email" maxlength="150" autocomplete="email" required value="${escapeHTML(p.email)}" /></div><div class="field-group"><label for="profile-phone">Phone number</label><input id="profile-phone" name="phone" type="tel" maxlength="32" autocomplete="tel" value="${escapeHTML(p.phone)}" /></div><div class="field-group"><label for="profile-business">Business / organisation</label><input id="profile-business" name="business" type="text" maxlength="100" autocomplete="organization" value="${escapeHTML(p.business)}" /></div><div class="profile-form-actions"><span>${icon('shield')} Saved locally in this browser</span><button type="submit" class="button button-primary">Save changes ${icon('arrowRight')}</button></div></form></div><aside class="profile-aside"><div class="profile-side-card"><span class="profile-side-icon">${icon('shield')}</span><h3>About your account</h3><p>This demo profile is stored on this device only. It is not connected to client records.</p></div><div class="profile-side-card alternate"><span class="profile-side-icon">${icon('mail')}</span><h3>Need to update something?</h3><p>Our team can help with any account questions.</p><a href="mailto:${EMAIL}">Email the team ${icon('arrowUpRight')}</a></div></aside></div></div>`;
+    return `
+      <div class="profile-page">
+        ${pageHead('Account', 'My profile', 'Keep your contact details current.')}
+        <div class="profile-layout">
+          <section class="surface-card profile-form-card">
+            <div class="profile-card-head">
+              <div class="profile-avatar-large">${escapeHTML(initials())}</div>
+              <div>
+                <h2>${escapeHTML(p.fullName)}</h2>
+                <p>${escapeHTML(p.business || 'Client account')}</p>
+              </div>
+            </div>
+
+            <form id="profile-form" class="profile-form">
+              <div class="field-group">
+                <label for="profile-name">Full name <span class="required">*</span></label>
+                <input id="profile-name" name="fullName" type="text" maxlength="80" autocomplete="name" required value="${escapeHTML(p.fullName)}" />
+              </div>
+              <div class="field-group">
+                <label for="profile-email">Email address <span class="required">*</span></label>
+                <input id="profile-email" name="email" type="email" maxlength="150" autocomplete="email" required value="${escapeHTML(p.email)}" />
+              </div>
+              <div class="field-group">
+                <label for="profile-phone">Phone number</label>
+                <input id="profile-phone" name="phone" type="tel" maxlength="32" autocomplete="tel" value="${escapeHTML(p.phone)}" />
+              </div>
+              <div class="field-group">
+                <label for="profile-business">Business / organisation</label>
+                <input id="profile-business" name="business" type="text" maxlength="100" autocomplete="organization" value="${escapeHTML(p.business)}" />
+              </div>
+              <div class="profile-form-actions">
+                <span class="save-note">${icon('shield')} Saved locally in this browser</span>
+                <button type="submit" class="button button-primary">Save changes ${icon('arrowRight')}</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="profile-side-stack">
+            <div class="surface-card mini-info-card">
+              <span class="section-chip">Contact</span>
+              <h3>Support</h3>
+              <p>Need help with your account or documents?</p>
+              <a href="mailto:${EMAIL}" class="text-link">Email support ${icon('arrowUpRight')}</a>
+            </div>
+            <div class="surface-card mini-info-card alt-card">
+              <span class="section-chip">Website</span>
+              <h3>View the main site</h3>
+              <p>Open the public TrendyTax website in a new tab.</p>
+              <a href="${SITE}" target="_blank" rel="noopener noreferrer" class="text-link">Open website ${icon('arrowUpRight')}</a>
+            </div>
+          </aside>
+        </div>
+      </div>`;
   }
 
   function render() {
@@ -154,21 +443,30 @@
     const route = routeName();
     if (!loggedIn()) {
       if (route !== 'login') { history.replaceState(null, '', '#/login'); }
-      document.title = 'Sign in | Trendy Tax Solutions Client Portal';
+      document.title = 'Sign in | TrendyTax Client Portal';
       app.innerHTML = loginView();
       state.sidebarOpen = false;
       return;
     }
-    if (route === 'login') { history.replaceState(null, '', '#/dashboard'); }
     const active = route === 'login' ? 'dashboard' : route;
-    document.title = ({ dashboard:'Overview',documents:'Documents',profile:'My Profile' }[active]) + ' | Trendy Tax Solutions Client Portal';
-    app.innerHTML = shell(active, ({ dashboard:dashboardView,documents:documentsView,profile:profileView }[active])());
+    const view = active === 'documents' ? documentsView() : active === 'profile' ? profileView() : dashboardView();
+    document.title = ({ dashboard: 'Overview', documents: 'Documents', profile: 'My Profile' }[active]) + ' | TrendyTax Client Portal';
+    app.innerHTML = shell(active, view);
   }
-  function rerenderPreserveScroll() { const y = window.scrollY; render(); window.scrollTo(0,y); }
+  function rerenderPreserveScroll() { const y = window.scrollY; render(); window.scrollTo(0, y); }
   function closeDialog(id) { const d = document.getElementById(id); if (d?.open) d.close(); if (id === 'preview-dialog') releasePreviewURL(); if (id === 'upload-dialog') resetUpload(); }
   function closeSidebar() { if (state.sidebarOpen) { state.sidebarOpen = false; rerenderPreserveScroll(); } }
-  function openUpload() { closeSidebar(); resetUpload(); const d = $('#upload-dialog'); if (d) d.showModal(); }
-  function resetUpload() { state.uploadFile = null; const el = $('#file-input'); if (el) el.value = ''; const title=$('#drop-title'); if (title) title.textContent = 'Choose a file or drag it here'; const help=$('#drop-help'); if (help) help.textContent = 'PDF, Word, Excel, images or text · up to 10 MB'; $('#drop-zone')?.classList.remove('chosen','is-dragging'); }
+  function openUpload() { resetUpload(); $('#upload-dialog').showModal(); }
+  function resetUpload() {
+    state.uploadFile = null;
+    const el = $('#file-input');
+    if (el) el.value = '';
+    const title = $('#drop-title');
+    if (title) title.textContent = 'Choose a file or drag it here';
+    const help = $('#drop-help');
+    if (help) help.textContent = 'PDF, Word, Excel, images or text · up to 10 MB';
+    $('#drop-zone')?.classList.remove('chosen', 'is-dragging');
+  }
   function selectFile(file) {
     if (!file) return;
     const ext = file.name.split('.').pop()?.toLowerCase();
@@ -196,63 +494,140 @@
     const ext = doc.name.split('.').pop().toLowerCase();
     const target = $('#preview-content');
     target.replaceChildren();
-    if (ext === 'pdf') { const frame = document.createElement('iframe'); frame.src = url; frame.title = `Preview of ${doc.name}`; frame.className = 'pdf-preview'; target.append(frame); }
-    else if (['jpg','jpeg','png'].includes(ext)) { const img = document.createElement('img'); img.src = url; img.alt = `Preview of ${doc.name}`; img.className = 'image-preview'; target.append(img); }
-    else if (ext === 'txt' && doc.blob) {
-      const text = await doc.blob.text(); const pre = document.createElement('pre'); pre.className='text-preview'; pre.textContent = text.substring(0,250000); target.append(pre);
-    } else { const div = document.createElement('div'); div.className = 'preview-unavailable'; div.innerHTML = `${icon('file')}<strong>Preview not available for this file type</strong><p>You can download the document to open it on your device.</p>`; target.append(div); }
+    if (ext === 'pdf') {
+      const frame = document.createElement('iframe');
+      frame.src = url;
+      frame.title = `Preview of ${doc.name}`;
+      frame.className = 'pdf-preview';
+      target.append(frame);
+    } else if (['jpg','jpeg','png'].includes(ext)) {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = `Preview of ${doc.name}`;
+      img.className = 'image-preview';
+      target.append(img);
+    } else if (ext === 'txt' && doc.blob) {
+      const text = await doc.blob.text();
+      const pre = document.createElement('pre');
+      pre.className = 'text-preview';
+      pre.textContent = text.substring(0, 250000);
+      target.append(pre);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'preview-unavailable';
+      div.innerHTML = `${icon('file')}<strong>Preview not available for this file type</strong><p>You can download the document to open it on your device.</p>`;
+      target.append(div);
+    }
     modal.showModal();
   }
   function safeDownloadName(name) { return String(name).replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_') || 'document'; }
   async function downloadDoc(doc) {
     const url = await fileURL(doc);
-    const a = document.createElement('a'); a.href = url; a.download = safeDownloadName(doc.name); document.body.append(a); a.click(); a.remove();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = safeDownloadName(doc.name);
+    document.body.append(a);
+    a.click();
+    a.remove();
     if (doc.source === 'local') setTimeout(() => URL.revokeObjectURL(url), 30000);
     toast(`Downloading ${doc.displayName || doc.name}`);
   }
   async function handleAction(el) {
     const action = el.dataset.action;
-    if (action === 'logout') { sessionStorage.removeItem(SESSION_KEY); state.sidebarOpen=false; history.replaceState(null,'','#/login'); render(); toast('Signed out of the demo.'); return; }
+    if (action === 'logout') { sessionStorage.removeItem(SESSION_KEY); state.sidebarOpen = false; history.replaceState(null, '', '#/login'); render(); toast('Signed out of the preview.'); return; }
     if (action === 'toggle-sidebar') { state.sidebarOpen = !state.sidebarOpen; rerenderPreserveScroll(); return; }
     if (action === 'close-sidebar') { closeSidebar(); return; }
-    if (action === 'toggle-password') { const input=$('#login-password'); if (!input) return; const show=input.type==='password'; input.type=show?'text':'password'; el.setAttribute('aria-pressed',String(show)); el.setAttribute('aria-label',show?'Hide password':'Show password'); return; }
+    if (action === 'toggle-password') {
+      const input = $('#login-password');
+      if (!input) return;
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      el.setAttribute('aria-pressed', String(show));
+      el.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      return;
+    }
     if (action === 'upload') { openUpload(); return; }
     if (action === 'filter') { state.filter = el.dataset.filter; rerenderPreserveScroll(); return; }
-    if (action === 'clear-filters') { state.filter='All documents'; state.query=''; state.sort='newest'; rerenderPreserveScroll(); return; }
+    if (action === 'clear-filters') { state.filter = 'All documents'; state.query = ''; state.sort = 'newest'; rerenderPreserveScroll(); return; }
     const doc = el.dataset.id ? getDoc(el.dataset.id) : null;
-    if (['preview','download','delete'].includes(action) && !doc) { toast('Document not found.','error'); return; }
+    if (['preview','download','delete'].includes(action) && !doc) { toast('Document not found.', 'error'); return; }
     if (action === 'preview') { await previewDoc(doc); return; }
     if (action === 'download') { await downloadDoc(doc); return; }
-    if (action === 'delete') { if (doc.source !== 'local') return; state.deleteId = doc.id; $('#delete-description').textContent = `“${doc.name}” will be removed from this browser. This cannot be undone.`; $('#delete-dialog').showModal(); }
+    if (action === 'delete') {
+      if (doc.source !== 'local') return;
+      state.deleteId = doc.id;
+      $('#delete-description').textContent = `“${doc.name}” will be removed from this browser. This cannot be undone.`;
+      $('#delete-dialog').showModal();
+    }
   }
   async function submitUpload() {
     if (state.busy) return;
     if (!state.uploadFile) { toast('Choose a file first.', 'error'); return; }
     if (!state.db) { toast('Local file storage is unavailable in this browser.', 'error'); return; }
-    state.busy = true; const submit = $('#upload-submit'); submit.disabled = true; submit.textContent = 'Adding…';
+    state.busy = true;
+    const submit = $('#upload-submit');
+    submit.disabled = true;
+    submit.textContent = 'Adding…';
     try {
       const file = state.uploadFile;
-      const doc = { id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()), name: file.name, displayName: file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g,' '), category: $('#document-category').value, uploaded: new Date().toISOString(), mime: file.type || 'application/octet-stream', size: file.size, source: 'local', blob: file };
+      const doc = {
+        id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
+        name: file.name,
+        displayName: file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' '),
+        category: $('#document-category').value,
+        uploaded: new Date().toISOString(),
+        mime: file.type || 'application/octet-stream',
+        size: file.size,
+        source: 'local',
+        blob: file
+      };
       await dbRequest('readwrite', store => store.put(doc));
       await loadDocs();
-      closeDialog('upload-dialog'); render(); toast('Document added to this browser.');
-    } catch (e) { toast(e.message || 'Could not save this document. Browser storage may be full.', 'error'); }
-    finally { state.busy=false; submit.disabled=false; submit.textContent='Add document'; }
+      closeDialog('upload-dialog');
+      render();
+      toast('Document added to this browser.');
+    } catch (e) {
+      toast(e.message || 'Could not save this document. Browser storage may be full.', 'error');
+    } finally {
+      state.busy = false;
+      submit.disabled = false;
+      submit.textContent = 'Add document';
+    }
   }
   async function confirmDelete() {
     if (!state.deleteId || state.busy) return;
     state.busy = true;
-    try { await dbRequest('readwrite', store => store.delete(state.deleteId)); await loadDocs(); closeDialog('delete-dialog'); state.deleteId = null; render(); toast('Document removed.'); }
-    catch { toast('Unable to delete document.', 'error'); }
-    finally { state.busy = false; }
+    try {
+      await dbRequest('readwrite', store => store.delete(state.deleteId));
+      await loadDocs();
+      closeDialog('delete-dialog');
+      state.deleteId = null;
+      render();
+      toast('Document removed.');
+    } catch {
+      toast('Unable to delete document.', 'error');
+    } finally {
+      state.busy = false;
+    }
   }
   function submitProfile(form) {
     if (!form.reportValidity()) return;
     const d = new FormData(form);
-    const next = { fullName: String(d.get('fullName')||'').trim(), email: String(d.get('email')||'').trim(), phone: String(d.get('phone')||'').trim(), business: String(d.get('business')||'').trim() };
+    const next = {
+      fullName: String(d.get('fullName') || '').trim(),
+      email: String(d.get('email') || '').trim(),
+      phone: String(d.get('phone') || '').trim(),
+      business: String(d.get('business') || '').trim()
+    };
     if (!next.fullName || !next.email) { toast('Name and email are required.', 'error'); return; }
-    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); state.profile = next; render(); toast('Profile changes saved to this browser.'); }
-    catch { toast('Browser storage is unavailable. Changes could not be saved.', 'error'); }
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
+      state.profile = next;
+      render();
+      toast('Profile changes saved to this browser.');
+    } catch {
+      toast('Browser storage is unavailable. Changes could not be saved.', 'error');
+    }
   }
   function globalEvents() {
     document.addEventListener('click', async e => {
@@ -260,36 +635,49 @@
       if (close) { closeDialog(close.dataset.closeDialog); return; }
       const el = e.target.closest('[data-action]');
       if (el) { e.preventDefault(); try { await handleAction(el); } catch (err) { console.error(err); toast('This action could not be completed.', 'error'); } }
-      else if (state.sidebarOpen && e.target.closest('.sidebar-link')) { state.sidebarOpen=false; }
+      else if (state.sidebarOpen && e.target.closest('.sidebar-link')) { state.sidebarOpen = false; }
     });
     document.addEventListener('submit', e => {
-      if (e.target.id === 'login-form') { e.preventDefault(); sessionStorage.setItem(SESSION_KEY, 'demo'); location.hash='#/dashboard'; render(); toast('Welcome to your client portal.'); }
+      if (e.target.id === 'login-form') { e.preventDefault(); sessionStorage.setItem(SESSION_KEY, 'demo'); location.hash = '#/dashboard'; render(); toast('Welcome to your client portal.'); }
       if (e.target.id === 'profile-form') { e.preventDefault(); submitProfile(e.target); }
       if (e.target.id === 'upload-form') { e.preventDefault(); submitUpload(); }
     });
     document.addEventListener('input', e => {
-      if (e.target.id === 'doc-search') { state.query = e.target.value; const listing=$('#library-rows'); if (listing) { const docs=filteredDocs(); listing.innerHTML=docsRows(docs); const count=$('.library-result-count'); if(count)count.textContent=`Showing ${docs.length} ${docs.length===1?'document':'documents'}`; } }
+      if (e.target.id === 'doc-search') {
+        state.query = e.target.value;
+        const listing = $('#library-rows');
+        if (listing) {
+          const docs = filteredDocs();
+          listing.innerHTML = docsRows(docs);
+          const count = $('.library-result-count');
+          if (count) count.textContent = `Showing ${docs.length} ${docs.length === 1 ? 'document' : 'documents'}`;
+        }
+      }
     });
     document.addEventListener('change', e => {
       if (e.target.id === 'file-input') selectFile(e.target.files?.[0]);
-      if (e.target.id === 'doc-sort') { state.sort=e.target.value; rerenderPreserveScroll(); }
+      if (e.target.id === 'doc-sort') { state.sort = e.target.value; rerenderPreserveScroll(); }
     });
     $('#confirm-delete').addEventListener('click', confirmDelete);
-    $('#preview-download').addEventListener('click', () => { if (state.previewDoc) downloadDoc(state.previewDoc).catch(() => toast('Unable to download file.','error')); });
-    $('#drop-zone').addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); $('#file-input').click(); } });
+    $('#preview-download').addEventListener('click', () => { if (state.previewDoc) downloadDoc(state.previewDoc).catch(() => toast('Unable to download file.', 'error')); });
+    $('#drop-zone').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#file-input').click(); } });
     ['dragenter','dragover'].forEach(name => $('#drop-zone').addEventListener(name, e => { e.preventDefault(); $('#drop-zone').classList.add('is-dragging'); }));
-    ['dragleave','drop'].forEach(name => $('#drop-zone').addEventListener(name, e => { e.preventDefault(); $('#drop-zone').classList.remove('is-dragging'); if (name==='drop') selectFile(e.dataTransfer?.files?.[0]); }));
+    ['dragleave','drop'].forEach(name => $('#drop-zone').addEventListener(name, e => {
+      e.preventDefault();
+      $('#drop-zone').classList.remove('is-dragging');
+      if (name === 'drop') selectFile(e.dataTransfer?.files?.[0]);
+    }));
     for (const dialog of document.querySelectorAll('dialog')) {
       dialog.addEventListener('click', e => { if (e.target === dialog) closeDialog(dialog.id); });
       dialog.addEventListener('close', () => { if (dialog.id === 'preview-dialog') releasePreviewURL(); if (dialog.id === 'upload-dialog') resetUpload(); });
     }
-    window.addEventListener('hashchange', () => { state.sidebarOpen=false; render(); window.scrollTo(0,0); });
-    window.addEventListener('keydown', e => { if(e.key==='Escape' && state.sidebarOpen) closeSidebar(); });
+    window.addEventListener('hashchange', () => { state.sidebarOpen = false; render(); window.scrollTo(0, 0); });
+    window.addEventListener('keydown', e => { if (e.key === 'Escape' && state.sidebarOpen) closeSidebar(); });
   }
   async function init() {
     globalEvents();
     try { state.db = await openDB(); await loadDocs(); }
-    catch(e) { console.warn('Local document store is unavailable:', e); }
+    catch (e) { console.warn('Local document store is unavailable:', e); }
     render();
   }
   init();
