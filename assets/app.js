@@ -108,14 +108,12 @@
     return `
       <div class="customer-signin" id="main">
         <section class="login-frame" aria-label="TrendyTax customer sign in">
-          <div class="login-art-pane" aria-hidden="true">
-            <img src="assets/img/login-artwork.svg" alt="" />
-          </div>
           <div class="login-content-pane">
             <div class="login-top-mark">${brand()}</div>
             <div class="login-inner">
+              <span class="login-kicker">Customer portal</span>
               <h1>Welcome back</h1>
-              <p class="login-introduction">Sign in to your client portal.</p>
+              <p class="login-introduction">Sign in to access your documents and profile.</p>
               <form id="login-form" class="login-fields" novalidate>
                 <div class="field-group">
                   <label for="login-email">Email address</label>
@@ -128,16 +126,24 @@
                     <button type="button" class="password-toggle" data-action="toggle-password" aria-label="Show password" aria-pressed="false">${icon('eye')}</button>
                   </div>
                 </div>
-                <label class="login-remember"><input type="checkbox" id="remember-me" /><span>Keep me signed in</span></label>
+                <div class="login-meta-row">
+                  <label class="login-remember"><input type="checkbox" id="remember-me" /><span>Keep me signed in</span></label>
+                  <span class="login-preview-note">Preview access</span>
+                </div>
                 <button class="button button-primary login-submit" type="submit">Sign in ${icon('arrowRight')}</button>
               </form>
-              <p class="login-demo-hint">Preview mode · No login details required</p>
             </div>
             <div class="login-copyright">© ${new Date().getFullYear()} TrendyTax Solutions</div>
+          </div>
+          <div class="login-art-pane" aria-hidden="true">
+            <div class="login-art-card">
+              <img src="assets/img/login-artwork.svg" alt="" />
+            </div>
           </div>
         </section>
       </div>`;
   }
+
 
   const navItem = (key, label, ico, current) => `
     <a href="#/${key}" class="sidebar-link ${current === key ? 'active' : ''}" ${current === key ? 'aria-current="page"' : ''}>
