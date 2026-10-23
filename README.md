@@ -1,41 +1,71 @@
-# Trendy Tax Solutions — Reference-led rebuild
+# Trendy Tax Solutions — Customer Portal (Frontend Preview)
 
-A complete rebuild of the Trendy Tax Solutions static website based on the **visual layout language** of the Accountaxpert Global Accounting Website Dribbble example (Flowmarc Creative): light sage canvas, dark navy services, green action elements, sharply structured small typography, dashboard-led hero and an editorial conversion funnel. All copy, photograph selections, contact information, and service information are tailored for Trendy Tax Solutions, not copied from Accountaxpert.
+Independent static frontend for the Australian accounting firm's customer portal, designed to match the existing Trendy Tax Solutions website.
 
-## Preview and deploy
+## Getting started
 
-Open `index.html`, or use `python -m http.server 8000` and visit `http://localhost:8000`. The entire folder can be deployed as a static Vercel project with output directory `.` or uploaded unchanged into a normal PHP web host's `public_html` directory; PHP is not required for these static pages.
+Open with a static web server (recommended, rather than directly opening `index.html` as a file):
 
-## Client details retained
+```sh
+# From this folder
+python -m http.server 8000
+# Visit http://localhost:8000/
+```
 
-- Business: Trendy Tax Solutions, Hobart, Tasmania.
-- Address: 162 Macquarie Street, Hobart TAS 7000.
-- Phone: 1300 968 554.
-- Email: info@trendytaxsolutions.com.au.
-- Booking link: https://www.trendytaxsolutions.com.au/book-online.
-- All 9 existing services and 3 editorial draft articles.
-- All 5 supplied client photographs in an auto-advancing, pauseable About Us gallery, plus their existing supplied team portrait.
-- 11 static HTML pages including client sign-in and portal: Home, About, Services, Insights, Contact, Privacy, 3 Insights article pages.
+No Node.js build, npm install, PHP runtime, API keys or database connection are required for this preview.
 
-## Honest limitations
+## Using the portal
 
-- The illustrative finance dashboard is design-only and **explicitly labelled as sample data**. The numbers are not claimed to be actual client metrics.
-- Contact enquiries open an email draft; no backend/SMTP service is provided. A real email submission service must be configured prior to launch.
-- The privacy policy is a review placeholder, not a final legal policy.
-- The three Insights articles are marked as editorial previews awaiting approval, not published official tax advice.
-- Editorial images are remotely loaded from Unsplash; supplied client gallery images are bundled and local.
-- This design is an independent interpretation of reference composition, not a literal clone of the reference creator's proprietary artwork/code.
+1. Select **Continue to portal**. No email/password is required for the demonstration.
+2. View the dashboard, sample documents, and profile.
+3. Upload a test file (max 10 MB; PDF, Word, Excel, PNG/JPG or TXT), choose a category and select **Add document**.
+4. Use category filters, search, sorting, preview and download. Uploaded files can also be deleted.
+5. Edit profile details and select **Save changes**. The profile is saved in this browser.
+6. Select **Sign out** to return to the sign-in screen.
 
-## File groups
+**Data behavior:** profile entries are kept in `localStorage`; uploaded files are kept locally in browser `IndexedDB`; the demonstration sign-in uses `sessionStorage`. Browser privacy modes/storage restrictions may prevent saving uploads. Data is *not* synced across devices. If browser site data is cleared, uploaded files and profile edits are lost.
 
-- `build_pages.py`: editable content source and generator (run after editing).
-- `assets/css/style.css`: fully replaced design system and page styles.
-- `assets/css/gallery.css`: new gallery design.
-- `assets/js/main.js`: nav, filters, accordion and contact form.
-- `assets/js/gallery.js`: accessible gallery carousel.
-- `assets/img/`: preserved local client-provided photographs and logo assets.
+**Important security limitation:** There is no server-side authentication, permission system, backend, database or secure cloud document storage in this preview. The login UI is for demonstration only. **Do not use this build for real client accounts, financial documents or personal data.** Production must integrate a PHP backend with real authentication, access control, encrypted transport, secure file upload and appropriate Australian data protection practices.
 
+## Deployment
 
-## Phase 2: Customer Portal Design Preview
+### Vercel preview
 
-Open **`client-login.html`**, then click **Enter Demo Portal** (no credentials). Explore Overview, My Documents, Requests, Activity, My Profile and Help & Support. Refer to **`PORTAL_REVIEW_NOTES.md`** for demonstration scope, caveats, production requirements and dual-host deployment instructions. Navigation links have been added throughout the existing public website, and the original site generation script preserves them.
+- Create a new Vercel project from a **separate repository** containing the root files of this folder.
+- Framework preset: **Other** (plain static site).
+- Root directory: `./` (or this folder when uploading into a larger repository).
+- Build command: **none**; output directory: **leave default**.
+- The included `vercel.json` adds `X-Robots-Tag: noindex, nofollow, noarchive` to responses.
+
+### PHP/Apache hosting (later)
+
+- Upload the same root files into a dedicated public directory, such as `public_html/portal/`.
+- No `.php` files, API, database, special rewrite rules or node runtime are required to display the preview.
+- All CSS, JS, images and example files use relative URLs. Navigation uses URL hashes (`#/documents`, etc.) so it works on basic PHP hosting without server rewrites.
+- Ensure HTTPS, prevent directory indexing and use a separate preview access restriction if demonstrating with nonpublic information. `robots.txt` and `noindex` are **not** access controls.
+- The frontend can later be wired to a PHP API; replace the `sessionStorage` demo login, local profile persistence and IndexedDB document store with authenticated endpoints. Do not enable live customer use until then.
+
+## Folder structure
+
+```text
+TrendyTax_Customer_Portal/
+├── index.html                 # App entry, accessible dialogs and sign-in
+├── robots.txt                 # Discourages indexing
+├── vercel.json                # Preview deployment configuration
+├── README.md
+└── assets/
+    ├── app.js                # Client-side routing and demo interactions
+    ├── styles.css            # Responsive styling
+    ├── img/brand-mark.png     # Brand mark from existing project
+    └── demo-documents/       # Four completely fictional sample PDFs
+```
+
+## Scope
+
+Included: login preview, dashboard, profile editor, document browsing/filtering/searching/sorting, example file preview/download, local file upload/preview/download/delete, sign-out, mobile navigation and responsive layouts.
+
+Not included: actual authentication, real user accounts, remote uploads, backend services, notifications, billing, admin console, approval processes or tasks. The proposal's core customer-facing portal requirements are represented without extending into unconfirmed modules.
+
+## Contact details
+
+The contact email and main-website references are based on the existing TrendyTax website files. Update these in `assets/app.js` if the client's final details differ.
