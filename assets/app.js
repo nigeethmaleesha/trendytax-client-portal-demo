@@ -25,6 +25,7 @@
     logout: '<path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>',
     arrowRight: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
     chevronRight: '<path d="m9 18 6-6-6-6"/>',
+    chevronLeft: '<path d="m15 18-6-6 6-6"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
     download: '<path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/>',
     eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.5"/>',
@@ -59,7 +60,9 @@
     try { return { ...DEMO_PROFILE, ...(JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}) }; }
     catch { return { ...DEMO_PROFILE }; }
   }
-  const state = { profile: getStoredProfile(), docs: [], filter: 'All documents', query: '', sort: 'newest', uploadFile: null, deleteId: null, previewDoc: null, previewUrl: null, sidebarOpen: false, db: null, busy: false };
+  const SIDEBAR_KEY = 'tts_sidebar_collapsed_v1';
+  const storedSidebar = () => { try { return localStorage.getItem(SIDEBAR_KEY) === 'yes'; } catch { return false; } };
+  const state = { sidebarCollapsed: storedSidebar(), profile: getStoredProfile(), docs: [], filter: 'All documents', query: '', sort: 'newest', uploadFile: null, deleteId: null, previewDoc: null, previewUrl: null, sidebarOpen: false, db: null, busy: false };
   const $ = selector => document.querySelector(selector);
 
   function openDB() {
@@ -137,7 +140,7 @@
           </div>
           <div class="login-art-pane" aria-hidden="true">
             <div class="login-art-card">
-              <img src="assets/img/login-artwork.svg" alt="" />
+              <img src="assets/img/login-character.png" alt="" />
             </div>
           </div>
         </section>
@@ -146,45 +149,50 @@
 
 
   const navItem = (key, label, ico, current) => `
-    <a href="#/${key}" class="sidebar-link ${current === key ? 'active' : ''}" ${current === key ? 'aria-current="page"' : ''}>
+    <a href="#/${key}" class="sidebar-link ${current === key ? 'active' : ''}" ${current === key ? 'aria-current="page"' : ''} aria-label="${label}" title="${label}">
       <span class="sidebar-link-icon">${icon(ico)}</span>
-      <span>${label}</span>
+      <span class="sidebar-link-label">${label}</span>
     </a>`;
 
   function shell(current, content) {
     const title = { dashboard: 'Overview', documents: 'Documents', profile: 'My profile' }[current];
     return `
-      <div class="portal-shell">
+      <div class="portal-shell ${state.sidebarCollapsed ? 'sidebar-collapsed' : ''}">
         <div class="mobile-scrim ${state.sidebarOpen ? 'visible' : ''}" data-action="close-sidebar"></div>
 
         <aside class="portal-sidebar ${state.sidebarOpen ? 'sidebar-open' : ''}" aria-label="Main navigation">
-          <div class="sidebar-brand-block">${brand(true)}</div>
-          <nav class="sidebar-nav">${navItem('dashboard', 'Overview', 'home', current)}${navItem('documents', 'Documents', 'folder', current)}${navItem('profile', 'My profile', 'user', current)}</nav>
-
-          <div class="sidebar-support">
-            <strong>Need help?</strong>
-            <a href="mailto:${EMAIL}">Contact support ${icon('arrowUpRight')}</a>
-            <a href="${SITE}" target="_blank" rel="noopener noreferrer">Open main site ${icon('arrowUpRight')}</a>
+          <div class="sidebar-brand-block">
+            <div class="sidebar-brand">${brand(true)}</div>
+            <button type="button" class="sidebar-collapse-control" data-action="collapse-sidebar" title="${state.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}" aria-label="${state.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}" aria-expanded="${!state.sidebarCollapsed}">
+              ${icon(state.sidebarCollapsed ? 'chevronRight' : 'chevronLeft')}
+            </button>
           </div>
-
-          <button class="sidebar-logout" data-action="logout" type="button">${icon('logout')}<span>Sign out</span></button>
+          <nav class="sidebar-nav" aria-label="Portal pages">
+            ${navItem('dashboard', 'Overview', 'home', current)}
+            ${navItem('documents', 'Documents', 'folder', current)}
+            ${navItem('profile', 'My profile', 'user', current)}
+          </nav>
+          <div class="sidebar-bottom">
+            <a class="sidebar-link sidebar-site" href="${SITE}" target="_blank" rel="noopener noreferrer" title="Main website" aria-label="Main website">
+              <span class="sidebar-link-icon">${icon('external')}</span><span class="sidebar-link-label">Main website</span>
+            </a>
+            <button class="sidebar-logout" data-action="logout" type="button" title="Sign out" aria-label="Sign out">
+              <span class="sidebar-link-icon">${icon('logout')}</span><span class="sidebar-link-label">Sign out</span>
+            </button>
+          </div>
         </aside>
 
         <div class="portal-stage">
           <header class="portal-topbar">
             <div class="topbar-left">
-              <button class="icon-button mobile-menu" aria-label="Open navigation" data-action="toggle-sidebar" aria-expanded="${state.sidebarOpen}" type="button">${icon('menu')}</button>
+              <button class="icon-button mobile-menu" aria-label="${state.sidebarOpen ? 'Close navigation' : 'Open navigation'}" data-action="toggle-sidebar" aria-expanded="${state.sidebarOpen}" type="button">${icon('menu')}</button>
               <div class="topbar-breadcrumb"><span>Client portal</span>${icon('chevronRight')}<strong>${title}</strong></div>
             </div>
-            <div class="topbar-actions">
-              <a class="topbar-site-link" href="${SITE}" target="_blank" rel="noopener noreferrer">Main site ${icon('arrowUpRight')}</a>
-              <a href="#/profile" class="topbar-user" title="View your profile">
-                <span class="topbar-avatar">${escapeHTML(initials())}</span>
-                <span class="topbar-user-meta"><strong>${escapeHTML(state.profile.fullName)}</strong><small>Client account</small></span>
-              </a>
-            </div>
+            <a href="#/profile" class="topbar-user" title="My profile">
+              <span class="topbar-avatar">${escapeHTML(initials())}</span>
+              <span class="topbar-user-meta"><strong>${escapeHTML(state.profile.fullName)}</strong><small>My account</small></span>
+            </a>
           </header>
-
           <main id="main" class="portal-content">${content}</main>
         </div>
       </div>`;
@@ -239,75 +247,39 @@
 
   function dashboardView() {
     const docs = allDocs();
-    const counts = {
-      all: docs.length,
-      uploaded: state.docs.length,
-      category: new Set(docs.map(d => d.category)).size
-    };
+    const counts = { all: docs.length, uploaded: state.docs.length, categories: new Set(docs.map(d => d.category)).size };
     const recent = docs.slice(0, 4);
-
     return `
       <div class="dashboard-page">
-        <section class="hero-card">
-          <div class="hero-copy">
-            <span class="section-chip chip-ghost">Overview</span>
-            <h1>Welcome back, ${escapeHTML(nameFirst())}</h1>
-            <p>Everything important is organised here.</p>
+        <div class="workspace-heading">
+          <div>
+            <span class="workspace-label">YOUR WORKSPACE</span>
+            <h1>Hello, ${escapeHTML(nameFirst())}<span class="heading-period">.</span></h1>
+            <p>Your files and account details, in one place.</p>
           </div>
-          <div class="hero-actions">
-            <a href="#/documents" class="button button-light">View documents ${icon('arrowRight')}</a>
-            <button type="button" data-action="upload" class="button button-ghost">${icon('plus')} Upload file</button>
-          </div>
-        </section>
-
-        <div class="metric-row">
-          <article class="metric-card">
-            <span class="metric-icon">${icon('folder')}</span>
-            <strong>${counts.all.toString().padStart(2,'0')}</strong>
-            <small>Documents</small>
-          </article>
-          <article class="metric-card">
-            <span class="metric-icon">${icon('upload')}</span>
-            <strong>${counts.uploaded.toString().padStart(2,'0')}</strong>
-            <small>Your uploads</small>
-          </article>
-          <article class="metric-card">
-            <span class="metric-icon">${icon('layers')}</span>
-            <strong>${counts.category.toString().padStart(2,'0')}</strong>
-            <small>Categories</small>
-          </article>
+          <button type="button" class="button button-primary workspace-upload" data-action="upload">${icon('plus')} Upload file</button>
         </div>
-
-        <div class="content-grid">
+        <section class="overview-strip" aria-label="Document overview">
+          <div class="overview-stat"><span class="overview-stat-icon">${icon('folder')}</span><span class="overview-stat-data"><strong>${String(counts.all).padStart(2, '0')}</strong><small>Documents</small></span></div>
+          <div class="overview-stat"><span class="overview-stat-icon">${icon('upload')}</span><span class="overview-stat-data"><strong>${String(counts.uploaded).padStart(2, '0')}</strong><small>Your uploads</small></span></div>
+          <div class="overview-stat"><span class="overview-stat-icon">${icon('layers')}</span><span class="overview-stat-data"><strong>${String(counts.categories).padStart(2, '0')}</strong><small>Categories</small></span></div>
+        </section>
+        <div class="content-grid dashboard-grid">
           <section class="surface-card recent-card">
             <div class="card-head">
-              <div>
-                <span class="section-chip">Recent files</span>
-                <h2>Latest documents</h2>
-              </div>
+              <div><span class="workspace-label">YOUR DOCUMENTS</span><h2>Recent files</h2></div>
               <a href="#/documents" class="text-link">View all ${icon('arrowRight')}</a>
             </div>
             ${docsRows(recent, true)}
           </section>
-
           <aside class="side-stack">
             <section class="surface-card action-card">
-              <div class="card-head compact-head">
-                <div>
-                  <span class="section-chip">Quick actions</span>
-                  <h2>Shortcuts</h2>
-                </div>
-              </div>
-              <button type="button" class="action-link" data-action="upload"><span>${icon('upload')}</span><div><strong>Upload file</strong><small>Add a document to this browser</small></div>${icon('arrowRight')}</button>
-              <a href="#/profile" class="action-link"><span>${icon('user')}</span><div><strong>Update profile</strong><small>Review your contact details</small></div>${icon('arrowRight')}</a>
-              <a href="${SITE}" target="_blank" rel="noopener noreferrer" class="action-link"><span>${icon('external')}</span><div><strong>Main website</strong><small>Open TrendyTax website</small></div>${icon('arrowRight')}</a>
+              <div class="card-head"><div><span class="workspace-label">QUICK ACCESS</span><h2>Shortcuts</h2></div></div>
+              <button type="button" class="action-link" data-action="upload"><span>${icon('upload')}</span><div><strong>Upload a document</strong><small>Add a new file</small></div>${icon('arrowRight')}</button>
+              <a href="#/documents" class="action-link"><span>${icon('folder')}</span><div><strong>Document library</strong><small>View all files</small></div>${icon('arrowRight')}</a>
+              <a href="#/profile" class="action-link"><span>${icon('user')}</span><div><strong>My profile</strong><small>Edit your details</small></div>${icon('arrowRight')}</a>
             </section>
-
-            <section class="surface-card note-card">
-              <span class="section-chip">Portal note</span>
-              <h2>Simple by design</h2>
-              <p>This preview keeps the experience focused on documents and account details.</p>
-            </section>
+            <div class="support-inline"><span>${icon('help')} Need assistance?</span><a href="mailto:${EMAIL}">Contact support ${icon('arrowUpRight')}</a></div>
           </aside>
         </div>
       </div>`;
@@ -334,7 +306,7 @@
             <div class="library-tabs" role="group" aria-label="Filter by category">
               ${filters.map(f => `<button type="button" class="tab-button ${state.filter === f ? 'selected' : ''}" data-action="filter" data-filter="${f}" aria-pressed="${state.filter === f}">${f}<span>${allDocs().filter(d => f === 'All documents' || d.category === f).length}</span></button>`).join('')}
             </div>
-            <div class="library-mini-note">Example files are included for the preview.</div>
+
           </div>
           <div class="library-controls">
             <div class="search-field">${icon('search')}<input type="search" id="doc-search" placeholder="Search documents" value="${escapeHTML(state.query)}" aria-label="Search documents" autocomplete="off" /></div>
@@ -387,16 +359,10 @@
 
           <aside class="profile-side-stack">
             <div class="surface-card mini-info-card">
-              <span class="section-chip">Contact</span>
-              <h3>Support</h3>
-              <p>Need help with your account or documents?</p>
+              <span class="workspace-label">NEED A HAND?</span>
+              <h3>We're here to help.</h3>
+              <p>Questions about your account or files?</p>
               <a href="mailto:${EMAIL}" class="text-link">Email support ${icon('arrowUpRight')}</a>
-            </div>
-            <div class="surface-card mini-info-card alt-card">
-              <span class="section-chip">Website</span>
-              <h3>View the main site</h3>
-              <p>Open the public TrendyTax website in a new tab.</p>
-              <a href="${SITE}" target="_blank" rel="noopener noreferrer" class="text-link">Open website ${icon('arrowUpRight')}</a>
             </div>
           </aside>
         </div>
@@ -500,6 +466,21 @@
   async function handleAction(el) {
     const action = el.dataset.action;
     if (action === 'logout') { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY); state.sidebarOpen = false; history.replaceState(null, '', '#/login'); render(); toast('Signed out of the preview.'); return; }
+    if (action === 'collapse-sidebar') {
+      state.sidebarCollapsed = !state.sidebarCollapsed;
+      try { localStorage.setItem(SIDEBAR_KEY, state.sidebarCollapsed ? 'yes' : 'no'); } catch { /* browser storage disabled */ }
+      const shell = document.querySelector('.portal-shell');
+      shell?.classList.toggle('sidebar-collapsed', state.sidebarCollapsed);
+      const button = document.querySelector('.sidebar-collapse-control');
+      if (button) {
+        const label = state.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
+        button.setAttribute('aria-expanded', String(!state.sidebarCollapsed));
+        button.innerHTML = icon(state.sidebarCollapsed ? 'chevronRight' : 'chevronLeft');
+      }
+      return;
+    }
     if (action === 'toggle-sidebar') { state.sidebarOpen = !state.sidebarOpen; rerenderPreserveScroll(); return; }
     if (action === 'close-sidebar') { closeSidebar(); return; }
     if (action === 'toggle-password') {

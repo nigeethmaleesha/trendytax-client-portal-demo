@@ -89,7 +89,7 @@ p{color:var(--muted)}
 /* Client sign in · refined split screen */
 .customer-signin{min-height:100dvh;display:grid;place-items:center;padding:20px;background:#e8e9e4}
 .login-frame{width:min(100%,1180px);height:min(680px,calc(100dvh - 40px));display:grid;grid-template-columns:minmax(360px,.92fr) minmax(420px,1.08fr);overflow:hidden;background:#fbfcfa;border-radius:24px;box-shadow:0 28px 74px rgba(29,55,57,.10);border:1px solid rgba(255,255,255,.86)}
-.login-content-pane{min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:30px clamp(28px,4vw,54px) 22px;background:#fbfcfa}
+.login-content-pane{min-width:0;min-height:0;display:flex;flex-direction:column;justify-content:space-between;padding:30px clamp(28px,4vw,54px) 42px;background:#fbfcfa}
 .login-top-mark .brand-mark img{width:40px;height:40px}
 .login-top-mark .brand-wordmark strong{font-size:18px}
 .login-top-mark .brand-wordmark span{font-size:9px}
@@ -111,25 +111,94 @@ p{color:var(--muted)}
 .login-submit{min-height:50px;width:100%;margin-top:2px;border-radius:12px;box-shadow:none;font-size:13px;justify-content:center}
 .login-submit .icon{width:17px;height:17px}
 .login-copyright{font-size:11px;color:#8b9c9f}
-.login-art-pane{display:flex;position:relative;min-width:0;background:#e2ebe5;padding:18px}
-.login-art-card{flex:1;border-radius:22px;background:linear-gradient(180deg,#e9f1ec 0%,#dce8e2 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.login-art-pane{display:flex;position:relative;min-width:0;min-height:0;height:100%;overflow:hidden;background:#e5efea;padding:16px}
+.login-art-card{flex:1;min-width:0;min-height:0;height:100%;border-radius:22px;background:#e4f0eb;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .login-art-card img{width:100%;height:100%;object-fit:contain;object-position:center;user-select:none;pointer-events:none}
 
-@media(max-width:980px){
+/* Compact desktop and landscape tablets: retain a balanced split layout. */
+@media (min-width:941px) and (max-width:1100px){
   .customer-signin{padding:16px}
-  .login-frame{height:min(620px,calc(100dvh - 32px));grid-template-columns:minmax(330px,.92fr) minmax(360px,1.08fr)}
-  .login-content-pane{padding:26px 26px 20px}
-  .login-inner{max-width:340px}
+  .login-frame{width:100%;height:min(640px,calc(100dvh - 32px));grid-template-columns:minmax(0, .94fr) minmax(0, 1.06fr)}
+  .login-content-pane{padding:26px clamp(24px,3.7vw,42px) 24px}
+  .login-inner{max-width:350px}
+  .login-inner h1{font-size:clamp(32px,3.7vw,43px)}
+  .login-art-pane{padding:12px}
 }
-@media(max-width:760px){
-  .customer-signin{padding:0;background:#fbfcfa;min-height:100dvh;display:block}
-  .login-frame{border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;min-height:100dvh;height:auto}
-  .login-art-pane{display:none}
-  .login-content-pane{flex:1;min-height:100dvh;padding:24px clamp(24px,6.3vw,36px) 22px}
-  .login-inner{max-width:400px;margin:auto;align-self:center}
-  .login-inner h1{font-size:40px}
-  .login-fields{margin-top:24px}
-  .login-copyright{text-align:center}
+
+/* Portrait tablets and smaller hybrid devices: a contained image above a
+   comfortably sized form, rather than two crushed desktop columns. */
+@media (min-width:681px) and (max-width:940px){
+  .customer-signin{padding:clamp(14px,3vw,28px);min-height:100dvh}
+  .login-frame{display:flex;flex-direction:column;width:min(100%,690px);height:auto;min-height:0;border-radius:24px}
+  .login-art-pane{order:-1;display:flex;flex:none;padding:14px 14px 0;background:#e5efea}
+  .login-art-card{flex:none;width:100%;height:clamp(175px,24svh,238px);border-radius:17px}
+  .login-art-card img{object-fit:contain;object-position:center;width:100%;height:100%}
+  .login-content-pane{order:1;min-height:0;flex:none;padding:22px clamp(25px,5vw,48px) 20px}
+  .login-top-mark{margin-bottom:16px}
+  .login-inner{max-width:410px;margin:0 auto;align-self:center}
+  .login-kicker{margin-bottom:8px}
+  .login-inner h1{font-size:clamp(32px,4.4vw,40px)}
+  .login-introduction{margin-top:7px}
+  .login-fields{margin-top:19px;gap:13px}
+  .login-fields input:not([type=checkbox]){min-height:46px;height:46px}
+  .login-submit{min-height:46px}
+  .login-copyright{text-align:center;padding-top:17px}
+}
+
+/* Short landscape tablets can still show artwork, without pushing the form
+   below the viewport. Very short screens may scroll naturally. */
+@media (min-width:681px) and (max-width:940px) and (max-height:730px){
+  .login-art-pane{padding:10px 10px 0}
+  .login-art-card{height:clamp(105px,17svh,145px)}
+  .login-content-pane{padding-top:13px;padding-bottom:12px}
+  .login-top-mark{margin-bottom:10px}
+  .login-kicker{margin-bottom:5px}
+  .login-inner h1{font-size:31px}
+  .login-introduction{margin-top:5px}
+  .login-fields{margin-top:12px;gap:10px}
+  .login-fields input:not([type=checkbox]){min-height:42px;height:42px}
+  .login-submit{min-height:43px}
+  .login-copyright{padding-top:10px}
+}
+
+/* Very short landscape windows should scroll instead of clipping the form. */
+@media (min-width:941px) and (max-height:570px){
+  .customer-signin{place-items:start center;padding:14px}
+  .login-frame{height:auto;min-height:535px}
+  .login-content-pane{padding-top:18px;padding-bottom:18px}
+  .login-kicker{margin-bottom:10px}
+  .login-fields{margin-top:16px;gap:12px}
+  .login-inner h1{font-size:clamp(30px,3.5vw,43px)}
+}
+
+/* Phones: artwork first, then the brand and form. */
+@media (max-width:680px){
+  .customer-signin{padding:0;background:#edf3f0;min-height:100dvh;display:block}
+  .login-frame{border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;min-height:100dvh;height:auto;background:#fbfcfa}
+  .login-art-pane{display:flex;order:-1;flex:none;padding:18px 18px 0;background:linear-gradient(180deg,#edf3f0 0%, #fbfcfa 100%)}
+  .login-art-card{width:100%;height:min(260px,36svh);flex:none;border-radius:24px;background:#e4f0eb}
+  .login-art-card img{object-fit:contain;object-position:center;transform:scale(.94)}
+  .login-content-pane{order:2;flex:1;min-height:0;padding:18px clamp(22px,6.3vw,34px) 24px;background:#fbfcfa}
+  .login-top-mark{margin-bottom:14px}
+  .login-inner{max-width:400px;margin:0 auto;align-self:center}
+  .login-inner h1{font-size:clamp(32px,8vw,38px)}
+  .login-introduction{font-size:13px}
+  .login-fields{margin-top:22px;gap:14px}
+  .login-copyright{text-align:center;padding-top:18px}
+}
+
+/* Keep essentials reachable on shorter phones and in landscape. */
+@media (max-width:680px) and (max-height:740px){
+  .login-art-pane{padding:10px 16px 0}
+  .login-art-card{height:clamp(132px,24svh,180px);border-radius:18px}
+  .login-content-pane{padding-top:13px;padding-bottom:15px}
+  .login-top-mark{margin-bottom:8px}
+  .login-kicker{margin-bottom:7px}
+  .login-fields{margin-top:16px;gap:11px}
+  .login-inner h1{font-size:32px}
+  .login-fields input:not([type=checkbox]){height:44px;min-height:44px}
+  .login-submit{min-height:45px}
+  .login-copyright{padding-top:13px}
 }
 
 /* App shell */
@@ -353,3 +422,239 @@ p{color:var(--muted)}
   .modal-actions .button{width:100%}
 }
 
+
+/* ─────────────────────────────────────────────────────────────
+   Refined client workspace
+   Login styles above are intentionally left untouched.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --page:#f7f8f6;
+  --line:#e5ebe8;
+  --shadow:0 9px 26px rgba(20,48,56,.04);
+  --sidebar:246px;
+  --sidebar-narrow:82px;
+}
+body{background:#f7f8f6}
+.portal-shell{
+  grid-template-columns:var(--sidebar) minmax(0,1fr);
+  min-width:0;
+  background:#f7f8f6;
+  transition:grid-template-columns .26s ease;
+}
+.portal-shell.sidebar-collapsed{grid-template-columns:var(--sidebar-narrow) minmax(0,1fr)}
+.portal-sidebar{
+  background:#173247;
+  padding:22px 14px 18px;
+  gap:31px;
+  overflow:visible;
+  z-index:30;
+}
+.sidebar-brand-block{padding:0 5px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;border-bottom:1px solid rgba(255,255,255,.13)}
+.sidebar-brand{min-width:0;white-space:nowrap}
+.sidebar-brand .brand-mark{gap:10px}
+.sidebar-brand .brand-mark img{width:39px;height:39px}
+.sidebar-brand .brand-wordmark strong{font-size:18px}
+.sidebar-brand .brand-wordmark span{font-size:9px}
+.sidebar-collapse-control{
+  /* Keep the arrow on the vertical boundary between sidebar and page. */
+  position:absolute;top:67px;right:-18px;z-index:5;
+  width:36px;height:36px;flex:none;
+  background:#27495b;color:#e0eeec;
+  border:1px solid rgba(255,255,255,.25);border-radius:11px;
+  display:grid;place-items:center;
+  box-shadow:0 3px 10px rgba(17,39,56,.18);
+  transition:background .18s;
+}
+.sidebar-collapse-control:hover{background:rgba(255,255,255,.19)}
+.sidebar-collapse-control .icon{width:18px;height:18px}
+.sidebar-nav{gap:6px}
+.sidebar-link{padding:8px 9px;min-height:51px;gap:11px;border-radius:12px;font-size:13px;font-weight:650}
+.sidebar-link-icon{background:transparent;width:31px;height:31px;border-radius:9px;flex:0 0 31px}
+.sidebar-link-icon .icon{width:19px;height:19px}
+.sidebar-link.active{box-shadow:none}
+.sidebar-link.active .sidebar-link-icon{background:#e8f3ef;color:#247a70}
+.sidebar-link-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-bottom{margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.13);display:grid;gap:5px}
+.sidebar-site{color:#c7dce0;min-height:48px}
+.sidebar-site:hover{background:rgba(255,255,255,.09)}
+.sidebar-logout{display:flex;align-items:center;justify-content:flex-start;gap:11px;padding:8px 9px;min-height:50px;width:100%;background:transparent;border:1px solid transparent;border-radius:12px;color:#d7e6e8;font-weight:650;font-size:13px}
+.sidebar-logout:hover{background:rgba(255,255,255,.09)}
+.portal-shell.sidebar-collapsed .sidebar-brand-block{flex-direction:row;justify-content:center;gap:0;padding:0 0 18px}
+.portal-shell.sidebar-collapsed .sidebar-brand .brand-mark{justify-content:center}
+.portal-shell.sidebar-collapsed .sidebar-brand .brand-wordmark{display:none}
+.portal-shell.sidebar-collapsed .sidebar-brand .brand-mark img{width:39px;height:39px}
+.portal-shell.sidebar-collapsed .sidebar-collapse-control{width:36px;height:36px;flex-basis:auto}
+.portal-shell.sidebar-collapsed .portal-sidebar{padding-inline:13px}
+.portal-shell.sidebar-collapsed .sidebar-link,
+.portal-shell.sidebar-collapsed .sidebar-logout{justify-content:center;padding:8px 0;gap:0}
+.portal-shell.sidebar-collapsed .sidebar-link .sidebar-link-label,
+.portal-shell.sidebar-collapsed .sidebar-logout .sidebar-link-label{display:none}
+.portal-shell.sidebar-collapsed .sidebar-link-icon{width:36px;height:36px;flex-basis:36px}
+.portal-shell.sidebar-collapsed .sidebar-nav{gap:8px}
+.portal-topbar{min-height:78px;padding:14px clamp(18px,2.4vw,38px);background:rgba(255,255,255,.96);border-bottom:1px solid var(--line)}
+.topbar-breadcrumb{color:#8a9ca1;font-size:12.5px;gap:8px}
+.topbar-breadcrumb .icon{width:16px;height:16px}
+.topbar-breadcrumb strong{color:#254457}
+.topbar-user{border:0;background:transparent;gap:10px;padding:3px 0}
+.topbar-user:hover .topbar-user-meta strong{color:var(--teal)}
+.topbar-avatar{width:40px;height:40px;background:#e4f1ed;color:#2d756d;font-size:12px}
+.topbar-user-meta strong{font-size:12.5px}
+.topbar-user-meta small{font-size:11px}
+.portal-content{width:100%;max-width:1560px;margin:0 auto;padding:clamp(22px,2.7vw,40px)}
+.workspace-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:24px;flex-wrap:wrap}
+.workspace-label{display:block;font-size:10px;font-weight:800;letter-spacing:.17em;color:#327c72;line-height:1.5}
+.workspace-heading h1{font-size:clamp(30px,3vw,43px);line-height:1.14;font-weight:750;margin:8px 0 8px;color:#173247}
+.heading-period{color:#50a493}
+.workspace-heading p{font-size:14px;color:#7b8d92}
+.workspace-upload{min-height:42px;padding:10px 15px;border-radius:10px;box-shadow:none;font-size:12.5px}
+.workspace-upload .icon{width:17px;height:17px}
+.overview-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);background:#fff;border-radius:18px;padding:16px 10px;margin-bottom:22px;box-shadow:var(--shadow)}
+.overview-stat{display:flex;align-items:center;justify-content:flex-start;gap:14px;min-width:0;padding:4px clamp(12px,2vw,26px)}
+.overview-stat+.overview-stat{border-left:1px solid #e8eeec}
+.overview-stat-icon{width:39px;height:39px;border-radius:12px;background:#edf6f2;color:#2f877a;display:grid;place-items:center;flex-shrink:0}
+.overview-stat-icon .icon{width:19px;height:19px}
+.overview-stat-data{display:flex;flex-direction:column;gap:3px;min-width:0}
+.overview-stat-data strong{font-family:var(--head);font-size:25px;line-height:1.05;color:#183247;letter-spacing:-.06em}
+.overview-stat-data small{font-size:12px;color:#778b8f}
+.dashboard-grid{grid-template-columns:minmax(0,1.65fr) minmax(255px,.75fr);gap:20px;align-items:start}
+.side-stack{gap:12px}
+.surface-card{border-radius:18px;padding:23px;border:1px solid #e4ebe8;box-shadow:var(--shadow);background:#fff}
+.card-head{margin-bottom:13px;align-items:center}
+.card-head h2{font-size:22px;line-height:1.2;margin-top:7px;letter-spacing:-.045em}
+.text-link{color:#287c70;font-size:12px;font-weight:750;white-space:nowrap}
+.text-link .icon{width:15px;height:15px}
+.action-card{padding:23px}
+.action-link{padding:13px 0;gap:10px}
+.action-link>span:first-child{width:37px;height:37px;border-radius:10px}
+.action-link strong{font-size:12.5px}
+.action-link small{font-size:11.5px}
+.action-link>.icon{width:16px;height:16px}
+.support-inline{padding:14px 15px;background:#eaf3ef;border-radius:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;font-size:11.5px}
+.support-inline span{display:flex;align-items:center;gap:7px;color:#486a69;font-weight:650}
+.support-inline a{display:flex;align-items:center;gap:5px;color:#28776b;font-weight:750;white-space:nowrap}
+.support-inline .icon{width:15px;height:15px}
+.compact-list .document-row,.compact-list .document-header{grid-template-columns:minmax(0,1fr) minmax(90px,.4fr) 92px;gap:8px}
+.compact-list .document-header span:nth-child(2),.compact-list .document-row .doc-category{display:none}
+.compact-list .doc-main{gap:11px}
+.compact-list .doc-details strong{font-size:12.5px}
+.compact-list .doc-details span{font-size:11.5px}
+.compact-list .document-glyph{width:40px;height:40px;border-radius:11px;gap:3px;padding:5px}
+.compact-list .document-glyph .icon{width:16px;height:16px}
+.compact-list .document-glyph small{font-size:9px}
+.compact-list .doc-date{font-size:11px;font-weight:600;color:#697f85}
+.compact-list .doc-actions{gap:5px}
+.compact-list .table-icon-button{width:34px;height:34px;border-radius:9px}
+.compact-list .table-icon-button .icon{width:16px;height:16px}
+.document-row{padding:14px 5px}
+.document-header{font-size:10px;color:#86979c}
+.doc-details strong{font-size:13px}
+.doc-details span{font-size:11.5px}
+.doc-date{font-size:12px;font-weight:600}
+.category-badge{font-size:11px;padding:6px 10px;background:#eff5f2;color:#357c70}
+.document-glyph{width:46px;height:46px;border-radius:12px;gap:3px}
+.document-glyph .icon{width:18px;height:18px}
+.table-icon-button{width:36px;height:36px;border-radius:10px}
+.table-icon-button .icon{width:17px;height:17px}
+.page-head{margin-bottom:22px;align-items:end}
+.page-head h1{font-size:clamp(30px,3vw,40px);margin-top:10px}
+.page-head p{font-size:13px;margin-top:6px}
+.page-head .section-chip{border-radius:4px;background:transparent;color:#2c7a70;padding:0;font-size:10px;letter-spacing:.13em}
+.page-head>.button{border-radius:10px;min-height:42px;padding:10px 15px;box-shadow:none}
+.library-card{padding:22px}
+.library-topbar{margin-bottom:17px}
+.library-tabs{gap:6px}
+.tab-button{border-radius:10px;padding:8px 11px;font-size:11.5px}
+.tab-button span{min-width:21px;height:21px;font-size:10px}
+.library-controls{gap:12px}
+.search-field{min-height:43px;border-radius:11px;min-width:min(100%,330px);color:#647d81}
+.sort-group select{min-height:43px;border-radius:11px;font-size:12px}
+.library-result-count{font-size:11.5px;color:#819095;font-weight:600}
+.profile-layout{grid-template-columns:minmax(0,1.55fr) minmax(250px,.6fr);gap:20px}
+.profile-form-card{padding:24px}
+.profile-card-head{padding-bottom:18px;margin-bottom:19px}
+.profile-avatar-large{width:52px;height:52px;border-radius:16px;font-size:16px}
+.profile-card-head h2{font-size:23px}
+.profile-card-head p{font-size:12px}
+.profile-form{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px;row-gap:17px}
+.profile-form .field-group label{font-size:12px}
+.profile-form .field-group input{min-height:45px;border-radius:10px;font-size:12.5px}
+.profile-form-actions{grid-column:1/-1;padding-top:9px;border-top:1px solid #eaf0ed;margin-top:2px}
+.save-note{font-size:11px;font-weight:600;color:#87979a}
+.save-note .icon{width:15px;height:15px}
+.profile-form-actions .button{min-height:42px;border-radius:10px;box-shadow:none}
+.mini-info-card{padding:23px;background:#edf5f1;border-color:#e2ede7}
+.mini-info-card h3{font-size:20px;margin-top:14px}
+.mini-info-card p{font-size:12.5px;margin:9px 0 18px}
+/* Sidebar drawer remains fully expanded on touch-sized layouts. */
+@media (max-width:1180px){
+  .dashboard-grid{grid-template-columns:minmax(0,1fr)}
+  .profile-layout{grid-template-columns:minmax(0,1fr)}
+  .profile-side-stack{max-width:none}
+}
+@media (max-width:980px){
+  .portal-shell,.portal-shell.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}
+  .portal-shell.sidebar-collapsed .portal-sidebar{padding:22px 14px 18px}
+  .portal-shell.sidebar-collapsed .sidebar-brand-block{flex-direction:row;padding:0 5px 18px}
+  .portal-shell.sidebar-collapsed .sidebar-brand .brand-wordmark{display:flex}
+  .portal-shell.sidebar-collapsed .sidebar-link,
+  .portal-shell.sidebar-collapsed .sidebar-logout{justify-content:flex-start;padding:8px 9px;gap:11px}
+  .portal-shell.sidebar-collapsed .sidebar-link .sidebar-link-label,
+  .portal-shell.sidebar-collapsed .sidebar-logout .sidebar-link-label{display:inline}
+  .portal-shell.sidebar-collapsed .sidebar-link-icon{width:31px;height:31px;flex-basis:31px}
+  .sidebar-collapse-control{display:none}
+  .portal-sidebar{width:min(85vw,292px);overflow-y:auto;z-index:40}
+  .portal-content{padding:25px 20px}
+  .portal-topbar{min-height:67px}
+  .dashboard-grid{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .compact-list .document-row{display:grid;grid-template-columns:minmax(0,1fr) 92px auto;gap:8px;padding:12px 2px}
+  .compact-list .document-header{display:none}
+  .compact-list .doc-actions{justify-content:flex-end}
+  .compact-list .doc-date{display:block}
+}
+@media (max-width:700px){
+  .portal-content{padding:23px 15px}
+  .workspace-heading h1{font-size:32px}
+  .overview-strip{padding:11px 8px}
+  .overview-stat{padding:4px 8px;gap:7px;flex-direction:column;text-align:center}
+  .overview-stat-icon{width:34px;height:34px;border-radius:10px}
+  .overview-stat-data strong{font-size:23px}
+  .overview-stat-data small{font-size:10.5px}
+  .surface-card,.library-card,.profile-form-card{padding:17px}
+  .profile-form{grid-template-columns:1fr}
+  .document-header{display:none}
+  .document-row{grid-template-columns:minmax(0,1fr) auto;column-gap:6px}
+  .document-row .doc-main{grid-column:1/-1}
+  .document-row .doc-category{grid-column:1}
+  .document-row .doc-date{grid-column:2}
+  .document-row .doc-actions{grid-column:1/-1;justify-content:flex-start}
+  .compact-list .document-row{grid-template-columns:minmax(0,1fr) auto}
+  .compact-list .doc-main{grid-column:1/-1}
+  .compact-list .doc-date{grid-column:1}
+  .compact-list .doc-actions{grid-column:2;justify-content:flex-end}
+  .portal-topbar{min-height:61px;padding:11px 15px}
+  .topbar-breadcrumb{display:flex}
+  .topbar-breadcrumb>span,.topbar-breadcrumb>.icon{display:none}
+}
+@media(max-width:420px){
+  .overview-stat{gap:4px}
+  .overview-stat-data small{font-size:10px}
+  .workspace-upload{width:100%}
+  .profile-form-actions .button{width:100%}
+  .support-inline{align-items:flex-start}
+  .library-tabs{width:100%;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .tab-button{flex:0 0 auto}
+  .card-head h2{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .portal-shell{transition:none}
+}
+/* Reset native button chrome on quick actions while keeping row dividers. */
+.action-card button.action-link{
+  width:100%;border:0;border-bottom:1px solid #e9efed;
+  background:transparent;text-align:left;color:inherit;padding:13px 0;
+  font:inherit;
+}
+.action-card button.action-link:hover{background:#f7faf8}
+.action-card button.action-link:last-child{border-bottom:0}

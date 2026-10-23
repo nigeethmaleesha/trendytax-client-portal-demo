@@ -17,13 +17,13 @@ No Node.js build, npm install, PHP runtime, API keys or database connection are 
 ## Using the portal
 
 1. Select **Sign in**. No email/password is required for the demonstration. Tick **Keep me signed in** to retain your preview session across browser restarts until sign out.
-2. View the dashboard, sample documents, and profile.
+2. View the simplified dashboard, sample documents, and profile. On desktop use the sidebar chevrons to collapse it to icons and expand again. The preference is saved in this browser. On smaller screens use the menu button to open the full navigation drawer.
 3. Upload a test file (max 10 MB; PDF, Word, Excel, PNG/JPG or TXT), choose a category and select **Add document**.
 4. Use category filters, search, sorting, preview and download. Uploaded files can also be deleted.
 5. Edit profile details and select **Save changes**. The profile is saved in this browser.
 6. Select **Sign out** to return to the sign-in screen.
 
-**Data behavior:** profile entries are kept in `localStorage`; uploaded files are kept locally in browser `IndexedDB`; the demonstration sign-in uses `sessionStorage` by default, or `localStorage` when **Keep me signed in** is selected. Browser privacy modes/storage restrictions may prevent saving uploads. Data is *not* synced across devices. If browser site data is cleared, uploaded files and profile edits are lost.
+**Data behavior:** sidebar display preference and profile entries are kept in `localStorage`; uploaded files are kept locally in browser `IndexedDB`; the demonstration sign-in uses `sessionStorage` by default, or `localStorage` when **Keep me signed in** is selected. Browser privacy modes/storage restrictions may prevent saving uploads. Data is *not* synced across devices. If browser site data is cleared, uploaded files and profile edits are lost.
 
 **Important security limitation:** There is no server-side authentication, permission system, backend, database or secure cloud document storage in this preview. The login UI is for demonstration only. **Do not use this build for real client accounts, financial documents or personal data.** Production must integrate a PHP backend with real authentication, access control, encrypted transport, secure file upload and appropriate Australian data protection practices.
 
@@ -45,6 +45,14 @@ No Node.js build, npm install, PHP runtime, API keys or database connection are 
 - Ensure HTTPS, prevent directory indexing and use a separate preview access restriction if demonstrating with nonpublic information. `robots.txt` and `noindex` are **not** access controls.
 - The frontend can later be wired to a PHP API; replace the `sessionStorage` demo login, local profile persistence and IndexedDB document store with authenticated endpoints. Do not enable live customer use until then.
 
+## Updated internal interface
+
+- The login page is unchanged. The signed-in interface now uses a lighter, compact layout, matching the portal design language.
+- The main website is linked once, in the sidebar footer. Dashboard and profile no longer repeat that link.
+- The desktop sidebar has an accessible **Collapse sidebar** / **Expand sidebar** chevron control. Collapsed mode retains navigation, external website and sign-out icons with accessible labels and hover titles.
+- The preference uses browser `localStorage` (`tts_sidebar_collapsed_v1`), while tablets and phones keep a full-width slide-out navigation panel.
+- The dashboard keeps only core summary information, recent documents, quick actions, and a compact contact link.
+
 ## Folder structure
 
 ```text
@@ -57,13 +65,21 @@ TrendyTax_Customer_Portal/
     ├── app.js                # Client-side routing and demo interactions
     ├── styles.css            # Responsive styling
     ├── img/brand-mark.png     # Brand mark from existing project
-    ├── img/login-artwork.svg  # Original decorative login illustration
+    ├── img/login-character.png # Custom branded mascot artwork
     └── demo-documents/       # Four completely fictional sample PDFs
 ```
 
+## Responsive login layout
+
+- Phones (up to 680 px wide): mascot image is contained above the logo and form. The image is scaled to fit without cropping; very short screens can scroll naturally.
+- Portrait tablets and compact devices (681–940 px): centered card with a compact illustration banner above a full-width, readable form. Short landscape windows use an even smaller banner.
+- Wider tablets, laptops and desktop screens (941 px and above): balanced two-column layout, form on the left and artwork on the right, with the artwork always contained inside its panel.
+- Short landscape desktop windows can scroll rather than hiding form controls.
+- Breakpoints use viewport CSS pixels (not device model names or browser zoom), so the layout adapts in Chrome Device Toolbar and on physical devices.
+
 ## Scope
 
-Included: redesigned image and form split login (no external links), persistent preview option, password visibility toggle, dashboard, profile editor, document browsing/filtering/searching/sorting, example file preview/download, local file upload/preview/download/delete, sign-out, mobile navigation and responsive layouts.
+Included: redesigned image and form split login with a TrendyTax branded mascot inspired by the supplied reference (no external links), persistent preview option, password visibility toggle, dashboard, profile editor, document browsing/filtering/searching/sorting, example file preview/download, local file upload/preview/download/delete, sign-out, mobile navigation and responsive layouts.
 
 Not included: actual authentication, real user accounts, remote uploads, backend services, notifications, billing, admin console, approval processes or tasks. The proposal's core customer-facing portal requirements are represented without extending into unconfirmed modules.
 
