@@ -91,7 +91,7 @@
   const sizeFmt = n => n < 1024 ? `${n} B` : n < 1048576 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1048576).toFixed(1)} MB`;
   const nameFirst = () => (state.profile.fullName || 'Alex').trim().split(/\s+/)[0];
   const initials = () => (state.profile.fullName || 'AC').trim().split(/\s+/).slice(0, 2).map(v => v[0] || '').join('').toUpperCase();
-  const loggedIn = () => sessionStorage.getItem(SESSION_KEY) === 'demo';
+  const loggedIn = () => sessionStorage.getItem(SESSION_KEY) === 'demo' || localStorage.getItem(SESSION_KEY) === 'demo';
   const routeName = () => { const r = (location.hash.replace(/^#\/?/, '') || 'dashboard').split(/[?/]/)[0]; return ['dashboard', 'documents', 'profile', 'login'].includes(r) ? r : 'dashboard'; };
   const brand = (light = false) => `<div class="brand-mark ${light ? 'brand-light' : ''}"><img src="assets/img/brand-mark.png" alt="" width="42" height="35" /><div class="brand-wordmark"><strong>TrendyTax</strong><span>SOLUTIONS</span></div></div>`;
 
@@ -106,77 +106,36 @@
 
   function loginView() {
     return `
-      <div class="signin-layout">
-        <section class="signin-panel" id="main">
-          <div class="signin-topbar">
-            ${brand()}
-            <a class="site-link" href="${SITE}" target="_blank" rel="noopener noreferrer">Main website ${icon('arrowUpRight')}</a>
+      <div class="customer-signin" id="main">
+        <section class="login-frame" aria-label="TrendyTax customer sign in">
+          <div class="login-art-pane" aria-hidden="true">
+            <img src="assets/img/login-artwork.svg" alt="" />
           </div>
-
-          <div class="signin-card">
-            <span class="section-chip">Customer portal</span>
-            <h1>Access your client workspace</h1>
-            <p class="signin-copy">View documents, update your details and keep everything in one place.</p>
-
-            <form id="login-form" class="auth-form" novalidate>
-              <div class="field-group">
-                <label for="login-email">Email address</label>
-                <input type="email" id="login-email" autocomplete="email" placeholder="you@example.com" />
-              </div>
-              <div class="field-group">
-                <div class="label-flex">
+          <div class="login-content-pane">
+            <div class="login-top-mark">${brand()}</div>
+            <div class="login-inner">
+              <h1>Welcome back</h1>
+              <p class="login-introduction">Sign in to your client portal.</p>
+              <form id="login-form" class="login-fields" novalidate>
+                <div class="field-group">
+                  <label for="login-email">Email address</label>
+                  <input id="login-email" type="email" autocomplete="email" placeholder="name@example.com" />
+                </div>
+                <div class="field-group">
                   <label for="login-password">Password</label>
-                  <span class="demo-only">Preview access</span>
+                  <div class="password-wrap">
+                    <input id="login-password" type="password" autocomplete="current-password" placeholder="Enter your password" />
+                    <button type="button" class="password-toggle" data-action="toggle-password" aria-label="Show password" aria-pressed="false">${icon('eye')}</button>
+                  </div>
                 </div>
-                <div class="password-wrap">
-                  <input id="login-password" type="password" autocomplete="current-password" placeholder="Enter your password" />
-                  <button class="password-toggle" type="button" data-action="toggle-password" aria-label="Show password" aria-pressed="false">${icon('eye')}</button>
-                </div>
-              </div>
-              <button class="button button-primary auth-submit" type="submit">Continue ${icon('arrowRight')}</button>
-            </form>
-
-            <div class="signin-note">
-              ${icon('sparkle')}
-              <div>
-                <strong>Preview mode</strong>
-                <p>Select “Continue” to explore the portal.</p>
-              </div>
+                <label class="login-remember"><input type="checkbox" id="remember-me" /><span>Keep me signed in</span></label>
+                <button class="button button-primary login-submit" type="submit">Sign in ${icon('arrowRight')}</button>
+              </form>
+              <p class="login-demo-hint">Preview mode · No login details required</p>
             </div>
-          </div>
-
-          <div class="signin-meta-row">
-            <div class="meta-pill"><span class="meta-pill-icon">${icon('shield')}</span><div><strong>Private</strong><small>Focused client access</small></div></div>
-            <div class="meta-pill"><span class="meta-pill-icon">${icon('layers')}</span><div><strong>Responsive</strong><small>Desktop, tablet and mobile</small></div></div>
+            <div class="login-copyright">© ${new Date().getFullYear()} TrendyTax Solutions</div>
           </div>
         </section>
-
-        <aside class="signin-showcase" aria-hidden="true">
-          <div class="showcase-hero">
-            <span class="section-chip chip-dark">TrendyTax portal</span>
-            <h2>Clean, smart and built to match your main site.</h2>
-            <p>A polished client-facing preview with just the essentials.</p>
-          </div>
-          <div class="showcase-stack">
-            <div class="showcase-card showcase-card-primary">
-              <div class="showcase-card-top"><span>Documents</span><span>4 ready</span></div>
-              <strong>Simple file access</strong>
-              <p>Preview, download and manage documents without clutter.</p>
-            </div>
-            <div class="showcase-grid">
-              <div class="showcase-card small-card">
-                <span class="showcase-icon">${icon('user')}</span>
-                <strong>Profile</strong>
-                <p>Quick account updates.</p>
-              </div>
-              <div class="showcase-card small-card">
-                <span class="showcase-icon">${icon('upload')}</span>
-                <strong>Uploads</strong>
-                <p>Local demo file upload.</p>
-              </div>
-            </div>
-          </div>
-        </aside>
       </div>`;
   }
 
@@ -534,7 +493,7 @@
   }
   async function handleAction(el) {
     const action = el.dataset.action;
-    if (action === 'logout') { sessionStorage.removeItem(SESSION_KEY); state.sidebarOpen = false; history.replaceState(null, '', '#/login'); render(); toast('Signed out of the preview.'); return; }
+    if (action === 'logout') { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY); state.sidebarOpen = false; history.replaceState(null, '', '#/login'); render(); toast('Signed out of the preview.'); return; }
     if (action === 'toggle-sidebar') { state.sidebarOpen = !state.sidebarOpen; rerenderPreserveScroll(); return; }
     if (action === 'close-sidebar') { closeSidebar(); return; }
     if (action === 'toggle-password') {
@@ -638,7 +597,7 @@
       else if (state.sidebarOpen && e.target.closest('.sidebar-link')) { state.sidebarOpen = false; }
     });
     document.addEventListener('submit', e => {
-      if (e.target.id === 'login-form') { e.preventDefault(); sessionStorage.setItem(SESSION_KEY, 'demo'); location.hash = '#/dashboard'; render(); toast('Welcome to your client portal.'); }
+      if (e.target.id === 'login-form') { e.preventDefault(); if ($('#remember-me')?.checked) { localStorage.setItem(SESSION_KEY, 'demo'); sessionStorage.removeItem(SESSION_KEY); } else { sessionStorage.setItem(SESSION_KEY, 'demo'); localStorage.removeItem(SESSION_KEY); } location.hash = '#/dashboard'; render(); toast('Welcome to your client portal.'); }
       if (e.target.id === 'profile-form') { e.preventDefault(); submitProfile(e.target); }
       if (e.target.id === 'upload-form') { e.preventDefault(); submitUpload(); }
     });

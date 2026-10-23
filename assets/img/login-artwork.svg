@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 760 920" role="img" aria-label="Abstract mint architectural ribbon and pearl spheres">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8f1e9"/><stop offset=".52" stop-color="#d8e8dd"/><stop offset="1" stop-color="#cbded2"/></linearGradient>
+    <radialGradient id="mist" cx=".5" cy=".5" r=".5"><stop stop-color="#f9fff7" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="railSide" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#789d8c"/><stop offset=".24" stop-color="#aecab9"/><stop offset=".75" stop-color="#b4ccba"/><stop offset="1" stop-color="#739b89"/></linearGradient>
+    <linearGradient id="railTop" x1="0" y1="0" x2="1" y2=".55"><stop stop-color="#d7e8d9"/><stop offset=".3" stop-color="#ecf5e9"/><stop offset=".65" stop-color="#d3e4d5"/><stop offset="1" stop-color="#a8c4b2"/></linearGradient>
+    <linearGradient id="groove" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#abc6b0"/><stop offset=".5" stop-color="#dbeadb"/><stop offset="1" stop-color="#bfd6c3"/></linearGradient>
+    <radialGradient id="pearl" cx=".27" cy=".23" r=".8"><stop stop-color="#ffffff"/><stop offset=".35" stop-color="#fbfff9"/><stop offset=".72" stop-color="#daeade"/><stop offset="1" stop-color="#9bb9a7"/></radialGradient>
+    <radialGradient id="pearlWarm" cx=".32" cy=".23" r=".9"><stop stop-color="#ffffff"/><stop offset=".38" stop-color="#fbfff9"/><stop offset=".8" stop-color="#dfebdf"/><stop offset="1" stop-color="#a7bdac"/></radialGradient>
+    <filter id="groundBlur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="36"/></filter>
+    <filter id="trackShadow" x="-45%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="17"/></filter>
+    <filter id="pearlShadow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="13"/></filter>
+    <clipPath id="clipAll"><rect width="760" height="920"/></clipPath>
+  </defs>
+  <g clip-path="url(#clipAll)">
+    <rect width="760" height="920" fill="url(#background)"/>
+    <ellipse cx="222" cy="130" rx="395" ry="345" fill="url(#mist)"/>
+    <ellipse cx="678" cy="875" rx="370" ry="330" fill="url(#mist)" opacity=".55"/>
+    <ellipse cx="394" cy="773" rx="335" ry="85" fill="#6d8e7b" opacity=".18" filter="url(#groundBlur)"/>
+    <path id="ribbon" d="M-134 761 C 23 822, 73 664, 182 632 C 315 591, 382 716, 487 614 C 558 544, 468 443, 556 375 C 613 330, 747 392, 792 241" fill="none" stroke-linecap="round"/>
+    <use xlink:href="#ribbon" stroke="#4c7864" stroke-width="158" opacity=".22" transform="translate(14 28)" filter="url(#trackShadow)"/>
+    <use xlink:href="#ribbon" stroke="url(#railSide)" stroke-width="142" opacity="1"/>
+    <use xlink:href="#ribbon" stroke="#f8fcf7" stroke-width="124" opacity=".72"/>
+    <use xlink:href="#ribbon" stroke="url(#railTop)" stroke-width="112" opacity="1"/>
+    <use xlink:href="#ribbon" stroke="#91b3a0" stroke-width="72" opacity=".7"/>
+    <use xlink:href="#ribbon" stroke="url(#groove)" stroke-width="64" opacity="1"/>
+    <use xlink:href="#ribbon" stroke="#e5f0e5" stroke-width="48" opacity=".82"/>
+    <!-- Fine joins in the sculptural inlay -->
+    <g fill="none" stroke="#7f9f8d" stroke-width="3" stroke-linecap="round" opacity=".4">
+      <path d="M94 691c-16-4-24-18-24-36"/>
+      <path d="M246 641c6-23 26-39 47-43"/>
+      <path d="M450 627c-20-11-31-34-31-51"/>
+      <path d="M533 436c-20-8-35-24-40-41"/>
+      <path d="M691 342c-11-20-8-37 1-54"/>
+    </g>
+    <g>
+      <ellipse cx="206" cy="654" rx="39" ry="15" fill="#607f70" opacity=".26" filter="url(#pearlShadow)"/>
+      <circle cx="209" cy="629" r="34" fill="url(#pearl)"/>
+      <circle cx="195" cy="612" r="9" fill="#fff" opacity=".44"/>
+    </g>
+    <g>
+      <ellipse cx="607" cy="399" rx="32" ry="14" fill="#607f70" opacity=".22" filter="url(#pearlShadow)"/>
+      <circle cx="610" cy="377" r="29" fill="url(#pearlWarm)"/>
+      <circle cx="599" cy="363" r="7" fill="#fff" opacity=".4"/>
+    </g>
+    <g opacity=".55" fill="none" stroke="#f7fff5" stroke-width="1.5"><circle cx="390" cy="228" r="92"/><circle cx="390" cy="228" r="119" opacity=".35"/></g>
+    <path d="M83 198h29M97.5 183v30" fill="none" stroke="#95b8a7" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+    <path d="M650 723h29M664.5 708v30" fill="none" stroke="#95b8a7" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  </g>
+</svg>

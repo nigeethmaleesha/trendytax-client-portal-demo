@@ -16,14 +16,14 @@ No Node.js build, npm install, PHP runtime, API keys or database connection are 
 
 ## Using the portal
 
-1. Select **Continue to portal**. No email/password is required for the demonstration.
+1. Select **Sign in**. No email/password is required for the demonstration. Tick **Keep me signed in** to retain your preview session across browser restarts until sign out.
 2. View the dashboard, sample documents, and profile.
 3. Upload a test file (max 10 MB; PDF, Word, Excel, PNG/JPG or TXT), choose a category and select **Add document**.
 4. Use category filters, search, sorting, preview and download. Uploaded files can also be deleted.
 5. Edit profile details and select **Save changes**. The profile is saved in this browser.
 6. Select **Sign out** to return to the sign-in screen.
 
-**Data behavior:** profile entries are kept in `localStorage`; uploaded files are kept locally in browser `IndexedDB`; the demonstration sign-in uses `sessionStorage`. Browser privacy modes/storage restrictions may prevent saving uploads. Data is *not* synced across devices. If browser site data is cleared, uploaded files and profile edits are lost.
+**Data behavior:** profile entries are kept in `localStorage`; uploaded files are kept locally in browser `IndexedDB`; the demonstration sign-in uses `sessionStorage` by default, or `localStorage` when **Keep me signed in** is selected. Browser privacy modes/storage restrictions may prevent saving uploads. Data is *not* synced across devices. If browser site data is cleared, uploaded files and profile edits are lost.
 
 **Important security limitation:** There is no server-side authentication, permission system, backend, database or secure cloud document storage in this preview. The login UI is for demonstration only. **Do not use this build for real client accounts, financial documents or personal data.** Production must integrate a PHP backend with real authentication, access control, encrypted transport, secure file upload and appropriate Australian data protection practices.
 
@@ -57,15 +57,16 @@ TrendyTax_Customer_Portal/
     ├── app.js                # Client-side routing and demo interactions
     ├── styles.css            # Responsive styling
     ├── img/brand-mark.png     # Brand mark from existing project
+    ├── img/login-artwork.svg  # Original decorative login illustration
     └── demo-documents/       # Four completely fictional sample PDFs
 ```
 
 ## Scope
 
-Included: login preview, dashboard, profile editor, document browsing/filtering/searching/sorting, example file preview/download, local file upload/preview/download/delete, sign-out, mobile navigation and responsive layouts.
+Included: redesigned image and form split login (no external links), persistent preview option, password visibility toggle, dashboard, profile editor, document browsing/filtering/searching/sorting, example file preview/download, local file upload/preview/download/delete, sign-out, mobile navigation and responsive layouts.
 
 Not included: actual authentication, real user accounts, remote uploads, backend services, notifications, billing, admin console, approval processes or tasks. The proposal's core customer-facing portal requirements are represented without extending into unconfirmed modules.
 
 ## Contact details
 
-The contact email and main-website references are based on the existing TrendyTax website files. Update these in `assets/app.js` if the client's final details differ.
+The authenticated portal links to the existing main website at `https://trendytax-website.vercel.app/`. The sign-in screen deliberately contains no external website links. Contact email and website URLs can be updated in `assets/app.js` if needed.
